@@ -56,6 +56,7 @@
                                         </td>
                                         <td class="px-6 py-4 text-sm text-right">
                                             <div class="flex items-center justify-end gap-2" 
+                                                 x-data="{}"
                                                  @confirm-action.window="$event.detail === 'delete-adviser-{{ $adviser->id }}' && document.getElementById('delete-form-{{ $adviser->id }}').submit()"
                                             >
                                                 <a href="{{ route('capstone-teacher.technical-advisers.edit', $adviser) }}" class="text-orange-600 hover:text-orange-700 font-semibold">

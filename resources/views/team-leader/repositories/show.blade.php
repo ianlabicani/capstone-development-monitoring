@@ -142,7 +142,7 @@
                 </div>
 
                 {{-- Danger Zone --}}
-                <div class="bg-white overflow-hidden shadow-sm rounded-2xl ring-1 ring-red-200">
+                <div class="bg-white overflow-hidden shadow-sm rounded-2xl ring-1 ring-red-200" x-data="{}">
                     <div class="border-b border-red-200 p-6">
                         <h2 class="text-lg font-semibold text-red-900">Danger Zone</h2>
                     </div>
