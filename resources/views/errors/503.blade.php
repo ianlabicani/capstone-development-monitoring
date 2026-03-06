@@ -1,9 +1,5 @@
-@extends('layouts.guest')
-
-@section('title', 'Service Unavailable')
-
-@push('body')
-<div class="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 px-4">
+<x-guest-layout>
+<div class="flex items-center justify-center min-h-[calc(100vh-4rem)] bg-gradient-to-br from-slate-50 to-slate-100 px-4">
     <div class="rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200 text-center max-w-md">
         <div class="mb-6 flex justify-center">
             <div class="flex h-20 w-20 items-center justify-center rounded-full bg-yellow-50 ring-1 ring-yellow-200">
@@ -24,4 +20,4 @@
         </div>
     </div>
 </div>
-@endpush
+</x-guest-layout>
