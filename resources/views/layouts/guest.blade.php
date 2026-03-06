@@ -21,15 +21,20 @@
         <nav x-data="{ open: false }" class="sticky top-0 z-50 bg-white shadow-sm">
             <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
                 <div class="flex h-16 items-center justify-between">
-                    <a href="/" class="flex items-center gap-2">
-                        <i class="fas fa-code text-xl text-orange-600"></i>
-                        <span class="text-xl font-bold text-slate-900">Capstone<span class="text-orange-600">Monitor</span></span>
-                    </a>
+                    <div class="flex items-center gap-6">
+                        <a href="/" class="flex items-center gap-2">
+                            <i class="fas fa-code text-xl text-orange-600"></i>
+                            <span class="text-xl font-bold text-slate-900">Capstone<span class="text-orange-600">Monitor</span></span>
+                        </a>
+                        {{-- Desktop public links --}}
+                        <div class="hidden sm:flex items-center gap-4">
+                            <a href="{{ route('leaderboard.teams') }}" class="text-sm font-medium {{ request()->routeIs('leaderboard.teams') ? 'text-orange-600 underline underline-offset-4 decoration-orange-600' : 'text-slate-600 hover:text-slate-900' }}">Teams</a>
+                            <a href="{{ route('leaderboard.contributors') }}" class="text-sm font-medium {{ request()->routeIs('leaderboard.contributors') ? 'text-orange-600 underline underline-offset-4 decoration-orange-600' : 'text-slate-600 hover:text-slate-900' }}">Contributors</a>
+                        </div>
+                    </div>
 
-                    {{-- Desktop links --}}
+                    {{-- Desktop auth links --}}
                     <div class="hidden sm:flex items-center gap-4">
-                        <a href="{{ route('leaderboard.teams') }}" class="text-sm font-medium text-slate-600 hover:text-slate-900">Teams</a>
-                        <a href="{{ route('leaderboard.contributors') }}" class="text-sm font-medium text-slate-600 hover:text-slate-900">Contributors</a>
                         @auth
                             <a href="{{ route('dashboard') }}" class="text-sm font-medium text-slate-600 hover:text-slate-900">Dashboard</a>
                         @else
@@ -51,8 +56,9 @@
             {{-- Mobile menu --}}
             <div x-show="open" x-cloak x-transition class="fixed inset-x-0 top-16 z-40 bg-white border-t border-slate-200 sm:hidden">
                 <div class="px-4 py-3 space-y-2 max-h-96 overflow-y-auto">
-                    <a href="{{ route('leaderboard.teams') }}" class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">Teams</a>
-                    <a href="{{ route('leaderboard.contributors') }}" class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">Contributors</a>
+                    <a href="{{ route('leaderboard.teams') }}" class="block rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('leaderboard.teams') ? 'bg-orange-50 text-orange-600' : 'text-slate-700 hover:bg-slate-100' }}">Teams</a>
+                    <a href="{{ route('leaderboard.contributors') }}" class="block rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('leaderboard.contributors') ? 'bg-orange-50 text-orange-600' : 'text-slate-700 hover:bg-slate-100' }}">Contributors</a>
+                    <hr class="border-slate-200">
                     @auth
                         <a href="{{ route('dashboard') }}" class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">Dashboard</a>
                     @else
