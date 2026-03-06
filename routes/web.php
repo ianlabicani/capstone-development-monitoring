@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\TechnicalAdviserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TeamLeader\RepositoryController;
+use App\Http\Controllers\TeamLeader\TeamController;
 use App\Http\Controllers\TechnicalAdviser\TeamLeaderController;
 use Illuminate\Support\Facades\Route;
 
@@ -41,6 +43,24 @@ Route::middleware(['auth', 'verified'])->prefix('technical-adviser')->name('tech
     Route::get('team-leaders/{user}/edit', [TeamLeaderController::class, 'edit'])->middleware('can:manage team leaders')->name('team-leaders.edit');
     Route::patch('team-leaders/{user}', [TeamLeaderController::class, 'update'])->middleware('can:manage team leaders')->name('team-leaders.update');
     Route::delete('team-leaders/{user}', [TeamLeaderController::class, 'destroy'])->middleware('can:manage team leaders')->name('team-leaders.destroy');
+});
+
+// Team Leader Routes
+Route::middleware(['auth', 'verified', 'permission:register repository'])->prefix('team-leader')->name('team-leader.')->group(function () {
+    // Team Setup
+    Route::get('team/create', [TeamController::class, 'create'])->name('team.create');
+    Route::post('team', [TeamController::class, 'store'])->name('team.store');
+    Route::get('team', [TeamController::class, 'show'])->name('team.show');
+    Route::get('team/edit', [TeamController::class, 'edit'])->name('team.edit');
+    Route::patch('team', [TeamController::class, 'update'])->name('team.update');
+
+    // Repositories
+    Route::get('repositories', [RepositoryController::class, 'index'])->name('repositories.index');
+    Route::get('repositories/create', [RepositoryController::class, 'create'])->name('repositories.create');
+    Route::post('repositories', [RepositoryController::class, 'store'])->name('repositories.store');
+    Route::get('repositories/{repository}', [RepositoryController::class, 'show'])->name('repositories.show');
+    Route::post('repositories/{repository}/sync', [RepositoryController::class, 'sync'])->name('repositories.sync');
+    Route::delete('repositories/{repository}', [RepositoryController::class, 'destroy'])->name('repositories.destroy');
 });
 
 require __DIR__.'/auth.php';
