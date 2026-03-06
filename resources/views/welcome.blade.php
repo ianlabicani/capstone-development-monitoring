@@ -54,6 +54,56 @@
         </div>
     </section>
 
+    {{-- AI-Powered Insights (Coming Soon) --}}
+    <section class="py-12 sm:py-16 bg-white">
+        <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <div class="rounded-2xl bg-gradient-to-br from-orange-50 to-orange-100 ring-1 ring-orange-200 p-8 md:p-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <div class="inline-flex items-center rounded-full bg-orange-200 px-4 py-1 text-sm font-semibold text-orange-800 mb-4">
+                            <i class="fas fa-sparkles mr-2"></i> Coming Soon
+                        </div>
+                        <h2 class="text-3xl font-bold tracking-tight text-slate-900 mb-4">AI-Powered Commit Analysis</h2>
+                        <p class="text-lg text-slate-700 mb-6">Our AI will intelligently analyze your team's commits and correlate them with your project's user stories, providing actionable insights on development progress and alignment.</p>
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-3">
+                                <i class="fas fa-brain text-orange-600 mt-1 flex-shrink-0"></i>
+                                <div>
+                                    <p class="font-semibold text-slate-900">Link Commits to User Stories</p>
+                                    <p class="text-sm text-slate-600">Automatically map commits to relevant user stories for better tracking</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <i class="fas fa-chart-line text-orange-600 mt-1 flex-shrink-0"></i>
+                                <div>
+                                    <p class="font-semibold text-slate-900">Story Completion Insights</p>
+                                    <p class="text-sm text-slate-600">Get AI-generated reports on story progress and development velocity</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <i class="fas fa-lightbulb text-orange-600 mt-1 flex-shrink-0"></i>
+                                <div>
+                                    <p class="font-semibold text-slate-900">Smart Recommendations</p>
+                                    <p class="text-sm text-slate-600">Receive AI suggestions for optimizing team workflow and productivity</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <div class="relative w-full max-w-sm">
+                            <div class="absolute inset-0 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl blur-lg opacity-30"></div>
+                            <div class="relative bg-white rounded-2xl ring-1 ring-orange-200 p-6 text-center">
+                                <i class="fas fa-brain text-6xl text-orange-600 mb-4 block"></i>
+                                <p class="text-slate-900 font-semibold mb-2">AI Analysis Engine</p>
+                                <p class="text-sm text-slate-600">Coming in Q2 2026</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     {{-- Role-Based Dashboards --}}
     <section class="py-12 sm:py-16 bg-slate-50">
         <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -188,56 +238,6 @@
                     <div class="w-14 h-14 bg-orange-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">4</div>
                     <h3 class="text-lg font-semibold text-slate-900 mb-2">View Dashboards</h3>
                     <p class="text-sm text-slate-600">Advisers, teachers, and teams see tailored progress dashboards.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {{-- AI-Powered Insights (Coming Soon) --}}
-    <section class="py-12 sm:py-16 bg-white">
-        <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-            <div class="rounded-2xl bg-gradient-to-br from-orange-50 to-orange-100 ring-1 ring-orange-200 p-8 md:p-12">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                    <div>
-                        <div class="inline-flex items-center rounded-full bg-orange-200 px-4 py-1 text-sm font-semibold text-orange-800 mb-4">
-                            <i class="fas fa-sparkles mr-2"></i> Coming Soon
-                        </div>
-                        <h2 class="text-3xl font-bold tracking-tight text-slate-900 mb-4">AI-Powered Commit Analysis</h2>
-                        <p class="text-lg text-slate-700 mb-6">Our AI will intelligently analyze your team's commits and correlate them with your project's user stories, providing actionable insights on development progress and alignment.</p>
-                        <div class="space-y-4">
-                            <div class="flex items-start gap-3">
-                                <i class="fas fa-brain text-orange-600 mt-1 flex-shrink-0"></i>
-                                <div>
-                                    <p class="font-semibold text-slate-900">Link Commits to User Stories</p>
-                                    <p class="text-sm text-slate-600">Automatically map commits to relevant user stories for better tracking</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-3">
-                                <i class="fas fa-chart-line text-orange-600 mt-1 flex-shrink-0"></i>
-                                <div>
-                                    <p class="font-semibold text-slate-900">Story Completion Insights</p>
-                                    <p class="text-sm text-slate-600">Get AI-generated reports on story progress and development velocity</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-3">
-                                <i class="fas fa-lightbulb text-orange-600 mt-1 flex-shrink-0"></i>
-                                <div>
-                                    <p class="font-semibold text-slate-900">Smart Recommendations</p>
-                                    <p class="text-sm text-slate-600">Receive AI suggestions for optimizing team workflow and productivity</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-center">
-                        <div class="relative w-full max-w-sm">
-                            <div class="absolute inset-0 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl blur-lg opacity-30"></div>
-                            <div class="relative bg-white rounded-2xl ring-1 ring-orange-200 p-6 text-center">
-                                <i class="fas fa-brain text-6xl text-orange-600 mb-4 block"></i>
-                                <p class="text-slate-900 font-semibold mb-2">AI Analysis Engine</p>
-                                <p class="text-sm text-slate-600">Coming in Q2 2026</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
