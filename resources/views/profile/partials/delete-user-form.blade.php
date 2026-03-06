@@ -1,4 +1,4 @@
-<section x-data="{ confirmingDeletion: {{ $errors->userDeletion->isNotEmpty() ? 'true' : 'false' }} }" class="space-y-6">
+<section x-data="{ confirmingDeletion: {{ $errors->userDeletion->isNotEmpty() ? 'true' : 'false' }}, loading: false }" class="space-y-6">
     <header>
         <h2 class="text-lg font-medium text-slate-900">
             {{ __('Delete Account') }}
@@ -20,7 +20,7 @@
         </div>
 
         <div class="mb-6 bg-white rounded-2xl overflow-hidden shadow-xl transform transition-all sm:w-full sm:max-w-2xl sm:mx-auto relative">
-            <form method="post" action="{{ route('profile.destroy') }}" class="p-6">
+            <form method="post" action="{{ route('profile.destroy') }}" class="p-6" @submit="loading = true">
                 @csrf
                 @method('delete')
 
@@ -49,8 +49,12 @@
                         {{ __('Cancel') }}
                     </button>
 
-                    <button type="submit" class="ms-3 inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                        {{ __('Delete Account') }}
+                    <button type="submit" :disabled="loading" class="ms-3 inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:opacity-75 disabled:cursor-not-allowed">
+                        <svg x-show="loading" class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 5 2.686 5 12h4z"></path>
+                        </svg>
+                        <span x-text="loading ? 'Deleting...' : 'Delete Account'"></span>
                     </button>
                 </div>
             </form>

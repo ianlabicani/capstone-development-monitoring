@@ -8,10 +8,15 @@
                     <p class="mt-2 text-sm text-slate-600">{{ $repository->description ?? 'No description' }}</p>
                 </div>
                 <div class="flex gap-2">
-                    <form action="{{ route('team-leader.repositories.sync', $repository) }}" method="POST">
+                    <form action="{{ route('team-leader.repositories.sync', $repository) }}" method="POST" x-data="{ loading: false }" @submit="loading = true">
                         @csrf
-                        <button type="submit" class="inline-flex items-center justify-center rounded-lg bg-orange-600 px-6 py-3 text-sm font-semibold text-white hover:bg-orange-700">
-                            <i class="fas fa-sync mr-2"></i> Sync Commits
+                        <button type="submit" :disabled="loading" class="inline-flex items-center justify-center rounded-lg bg-orange-600 px-6 py-3 text-sm font-semibold text-white hover:bg-orange-700 disabled:opacity-75 disabled:cursor-not-allowed">
+                            <svg x-show="loading" class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 5 2.686 5 12h4z"></path>
+                            </svg>
+                            <i x-show="!loading" class="fas fa-sync mr-2"></i>
+                            <span x-text="loading ? 'Syncing...' : 'Sync Commits'"></span>
                         </button>
                     </form>
                     <a href="{{ route('team-leader.repositories.index') }}" class="inline-flex items-center justify-center rounded-lg border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-50">

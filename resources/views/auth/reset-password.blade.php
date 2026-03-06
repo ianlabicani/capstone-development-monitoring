@@ -3,7 +3,7 @@
         <div class="w-full max-w-md bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-8">
             <h2 class="text-2xl font-bold text-slate-900 text-center mb-6">{{ __('Reset Password') }}</h2>
 
-            <form method="POST" action="{{ route('password.store') }}">
+            <form method="POST" action="{{ route('password.store') }}" x-data="{ loading: false }" @submit="loading = true">
                 @csrf
                 <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
@@ -38,9 +38,13 @@
                 </div>
 
                 <div class="mt-6">
-                    <button type="submit"
-                        class="w-full inline-flex items-center justify-center rounded-lg bg-orange-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300 transition">
-                        {{ __('Reset Password') }}
+                    <button type="submit" :disabled="loading"
+                        class="w-full inline-flex items-center justify-center rounded-lg bg-orange-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300 transition disabled:opacity-75 disabled:cursor-not-allowed">
+                        <svg x-show="loading" class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 5 2.686 5 12h4z"></path>
+                        </svg>
+                        <span x-text="loading ? 'Resetting...' : 'Reset Password'"></span>
                     </button>
                 </div>
             </form>

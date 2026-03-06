@@ -22,7 +22,7 @@
         </div>
     @endif
 
-    <form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-6" x-data="{ loading: false }" @submit="loading = true">
         @csrf
         @method('put')
 
@@ -86,9 +86,14 @@
         {{-- Submit Button --}}
         <button
             type="submit"
-            class="inline-flex items-center px-6 py-2 bg-orange-600 border border-transparent rounded-lg font-semibold text-sm text-white hover:bg-orange-700 focus:bg-orange-700 active:bg-orange-800 focus:outline-none focus:ring-2 focus:ring-orange-300 transition ease-in-out duration-150"
+            :disabled="loading"
+            class="inline-flex items-center px-6 py-2 bg-orange-600 border border-transparent rounded-lg font-semibold text-sm text-white hover:bg-orange-700 focus:bg-orange-700 active:bg-orange-800 focus:outline-none focus:ring-2 focus:ring-orange-300 transition ease-in-out duration-150 disabled:opacity-75 disabled:cursor-not-allowed"
         >
-            {{ __('Update Password') }}
+            <svg x-show="loading" class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 5 2.686 5 12h4z"></path>
+            </svg>
+            <span x-text="loading ? 'Updating...' : 'Update Password'"></span>
         </button>
     </form>
 </section>
