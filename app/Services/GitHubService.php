@@ -12,9 +12,13 @@ class GitHubService
     public function __construct()
     {
         $this->http = Http::baseUrl(config('services.github.api_url'))
-            ->withToken(config('services.github.token'))
             ->acceptJson()
             ->throw();
+
+        $token = config('services.github.token');
+        if ($token) {
+            $this->http = $this->http->withToken($token);
+        }
     }
 
     /**
