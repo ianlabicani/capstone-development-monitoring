@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -25,6 +27,7 @@ class User extends Authenticatable
         'email',
         'password',
         'must_change_password',
+        'created_by',
     ];
 
     /**
@@ -54,5 +57,15 @@ class User extends Authenticatable
     public function team(): HasOne
     {
         return $this->hasOne(Team::class);
+    }
+
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function createdUsers(): HasMany
+    {
+        return $this->hasMany(User::class, 'created_by');
     }
 }

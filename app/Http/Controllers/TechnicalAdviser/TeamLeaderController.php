@@ -7,15 +7,17 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTeamLeaderRequest;
 use App\Http\Requests\UpdateTeamLeaderRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class TeamLeaderController extends Controller
 {
     public function index()
     {
-        $teamLeaders = User::whereHas('roles', function ($query) {
-            $query->where('name', UserRole::TeamLeader->value);
-        })->get();
+        $teamLeaders = Auth::user()->createdUsers()
+            ->whereHas('roles', function ($query) {
+                $query->where('name', UserRole::TeamLeader->value);
+            })->get();
 
         return view('technical-adviser.team-leaders.index', compact('teamLeaders'));
     }
@@ -32,6 +34,7 @@ class TeamLeaderController extends Controller
             'email' => $request->validated('email'),
             'password' => Hash::make('password'),
             'must_change_password' => true,
+            'created_by' => Auth::id(),
         ]);
 
         $user->assignRole(UserRole::TeamLeader->value);
