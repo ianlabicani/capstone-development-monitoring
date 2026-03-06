@@ -23,7 +23,11 @@ class DashboardRedirectController extends Controller
             return redirect()->route('team-leader.dashboard');
         }
 
-        // Admin and default view
+        if ($user->hasRole('admin')) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        // Default view
         return view('dashboard');
     }
 }

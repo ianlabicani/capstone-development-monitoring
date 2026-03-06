@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\TechnicalAdviserController as AdminTechnicalAdviserController;
 use App\Http\Controllers\CapstoneTeacher\DashboardController as CapstoneTeacherDashboardController;
@@ -30,6 +31,9 @@ Route::middleware('auth')->group(function () {
 
 // Admin Routes
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+    // Dashboard
+    Route::get('dashboard', AdminDashboardController::class)->name('dashboard');
+
     // Roles & Permissions
     Route::get('roles', [RoleController::class, 'index'])->middleware('can:manage system')->name('roles.index');
     Route::get('roles/{role}', [RoleController::class, 'show'])->middleware('can:manage system')->name('roles.show');

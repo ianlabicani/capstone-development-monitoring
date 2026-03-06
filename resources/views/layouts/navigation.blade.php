@@ -14,7 +14,11 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <!-- Dashboard: Role-aware routing -->
-                    @if(Auth::user()->hasRole('team_leader'))
+                    @if(Auth::user()->hasRole('admin'))
+                        <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out {{ request()->routeIs('admin.dashboard') ? 'border-orange-500 text-slate-900 focus:border-orange-700' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 focus:text-slate-700 focus:border-slate-300' }}">
+                            {{ __('Dashboard') }}
+                        </a>
+                    @elseif(Auth::user()->hasRole('team_leader'))
                         <a href="{{ route('team-leader.dashboard') }}" class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out {{ request()->routeIs('team-leader.dashboard') ? 'border-orange-500 text-slate-900 focus:border-orange-700' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 focus:text-slate-700 focus:border-slate-300' }}">
                             {{ __('Dashboard') }}
                         </a>
@@ -128,7 +132,11 @@
     <div :class="{'block': open, 'hidden': !open}" class="fixed inset-x-0 top-16 z-40 bg-white border-t border-slate-200 hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1 max-h-96 overflow-y-auto">
             <!-- Dashboard: Role-aware routing -->
-            @if(Auth::user()->hasRole('team_leader'))
+            @if(Auth::user()->hasRole('admin'))
+                <a href="{{ route('admin.dashboard') }}" class="block w-full ps-3 pe-4 py-2 border-l-4 text-start text-base font-medium transition duration-150 ease-in-out {{ request()->routeIs('admin.dashboard') ? 'border-orange-500 text-orange-700 bg-orange-50 focus:text-orange-800 focus:bg-orange-100 focus:border-orange-700' : 'border-transparent text-slate-600 hover:text-slate-800 hover:bg-slate-50 hover:border-slate-300 focus:text-slate-800 focus:bg-slate-50 focus:border-slate-300' }}">
+                    {{ __('Dashboard') }}
+                </a>
+            @elseif(Auth::user()->hasRole('team_leader'))
                 <a href="{{ route('team-leader.dashboard') }}" class="block w-full ps-3 pe-4 py-2 border-l-4 text-start text-base font-medium transition duration-150 ease-in-out {{ request()->routeIs('team-leader.dashboard') ? 'border-orange-500 text-orange-700 bg-orange-50 focus:text-orange-800 focus:bg-orange-100 focus:border-orange-700' : 'border-transparent text-slate-600 hover:text-slate-800 hover:bg-slate-50 hover:border-slate-300 focus:text-slate-800 focus:bg-slate-50 focus:border-slate-300' }}">
                     {{ __('Dashboard') }}
                 </a>
