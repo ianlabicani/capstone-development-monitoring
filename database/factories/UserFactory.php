@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -40,5 +41,37 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    /**
+     * Assign the admin role after creation.
+     */
+    public function admin(): static
+    {
+        return $this->afterCreating(fn ($user) => $user->assignSingleRole(UserRole::Admin));
+    }
+
+    /**
+     * Assign the capstone teacher role after creation.
+     */
+    public function capstoneTeacher(): static
+    {
+        return $this->afterCreating(fn ($user) => $user->assignSingleRole(UserRole::CapstoneTeacher));
+    }
+
+    /**
+     * Assign the technical adviser role after creation.
+     */
+    public function technicalAdviser(): static
+    {
+        return $this->afterCreating(fn ($user) => $user->assignSingleRole(UserRole::TechnicalAdviser));
+    }
+
+    /**
+     * Assign the team leader role after creation.
+     */
+    public function teamLeader(): static
+    {
+        return $this->afterCreating(fn ($user) => $user->assignSingleRole(UserRole::TeamLeader));
     }
 }
