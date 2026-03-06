@@ -18,7 +18,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-slate-900 antialiased">
-        <nav x-data="{ open: false }" class="bg-white shadow-sm">
+        <nav x-data="{ open: false }" class="sticky top-0 z-50 bg-white shadow-sm">
             <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
                 <div class="flex h-16 items-center justify-between">
                     <a href="/" class="flex items-center gap-2">
@@ -40,15 +40,15 @@
 
                     {{-- Mobile hamburger --}}
                     <button @click="open = !open" class="sm:hidden inline-flex items-center justify-center rounded-md p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 focus:outline-none focus:bg-slate-100 transition">
-                        <i x-show="!open" class="fas fa-bars text-xl"></i>
+                        <i x-show="!open" x-cloak class="fas fa-bars text-xl"></i>
                         <i x-show="open" x-cloak class="fas fa-times text-xl"></i>
                     </button>
                 </div>
             </div>
 
             {{-- Mobile menu --}}
-            <div x-show="open" x-cloak x-transition class="sm:hidden border-t border-slate-200">
-                <div class="px-4 py-3 space-y-2">
+            <div x-show="open" x-cloak x-transition class="fixed inset-x-0 top-16 z-40 bg-white border-t border-slate-200 sm:hidden">
+                <div class="px-4 py-3 space-y-2 max-h-96 overflow-y-auto">
                     @auth
                         <a href="{{ route('dashboard') }}" class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">Dashboard</a>
                     @else
