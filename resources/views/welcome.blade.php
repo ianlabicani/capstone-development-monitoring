@@ -1,28 +1,4 @@
 <x-guest-layout>
-    {{-- Navigation --}}
-    <nav class="bg-white shadow-sm">
-        <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-            <div class="flex h-16 items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <svg class="h-8 w-8 text-orange-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" />
-                    </svg>
-                    <span class="text-xl font-bold text-slate-900">Capstone<span class="text-orange-600">Monitor</span></span>
-                </div>
-                <div class="flex items-center gap-4">
-                    @auth
-                        <a href="{{ route('dashboard') }}" class="text-sm font-medium text-slate-600 hover:text-slate-900">Dashboard</a>
-                    @else
-                        <a href="{{ route('login') }}" class="text-sm font-medium text-slate-600 hover:text-slate-900">Log in</a>
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="inline-flex items-center justify-center rounded-lg bg-orange-600 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300">Register</a>
-                        @endif
-                    @endauth
-                </div>
-            </div>
-        </div>
-    </nav>
-
     {{-- Hero Section --}}
     <section class="relative overflow-hidden bg-slate-900">
         <div class="absolute inset-0 bg-gradient-to-br from-orange-600/20 to-slate-900/80"></div>
