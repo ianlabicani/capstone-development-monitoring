@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CapstoneTeacherController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\TechnicalAdviserController as AdminTechnicalAdviserController;
@@ -48,6 +49,15 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('technical-advisers/{user}/edit', [AdminTechnicalAdviserController::class, 'edit'])->middleware('can:manage users')->name('technical-advisers.edit');
     Route::patch('technical-advisers/{user}', [AdminTechnicalAdviserController::class, 'update'])->middleware('can:manage users')->name('technical-advisers.update');
     Route::delete('technical-advisers/{user}', [AdminTechnicalAdviserController::class, 'destroy'])->middleware('can:manage users')->name('technical-advisers.destroy');
+
+    // Capstone Teachers
+    Route::get('capstone-teachers', [CapstoneTeacherController::class, 'index'])->middleware('can:manage users')->name('capstone-teachers.index');
+    Route::get('capstone-teachers/create', [CapstoneTeacherController::class, 'create'])->middleware('can:manage users')->name('capstone-teachers.create');
+    Route::post('capstone-teachers', [CapstoneTeacherController::class, 'store'])->middleware('can:manage users')->name('capstone-teachers.store');
+    Route::get('capstone-teachers/{user}', [CapstoneTeacherController::class, 'show'])->middleware('can:manage users')->name('capstone-teachers.show');
+    Route::get('capstone-teachers/{user}/edit', [CapstoneTeacherController::class, 'edit'])->middleware('can:manage users')->name('capstone-teachers.edit');
+    Route::patch('capstone-teachers/{user}', [CapstoneTeacherController::class, 'update'])->middleware('can:manage users')->name('capstone-teachers.update');
+    Route::delete('capstone-teachers/{user}', [CapstoneTeacherController::class, 'destroy'])->middleware('can:manage users')->name('capstone-teachers.destroy');
 });
 
 // Technical Adviser Routes
