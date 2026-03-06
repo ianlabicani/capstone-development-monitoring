@@ -75,6 +75,7 @@ Act as a practical startup engineering partner — business-minded, direct, and 
 - **Tests**: Write Pest tests in `tests/Feature/` or `tests/Unit/`; use factories for model creation
 - **Database**: Prefer Eloquent with eager loading; avoid `DB::` facade
 - **Frontend**: Follow Tailwind v4 utilities; check sibling components for naming patterns
+- **UI Consistency**: When creating or updating any UI, always read `resources/views/welcome.blade.php` first as the design reference. Match its color scheme (orange-600 primary, emerald accents, slate neutrals), spacing patterns, component structure (rounded-2xl cards, ring-1 borders, shadow-sm), and responsive breakpoints. Every new page or component must look like it belongs on the same site as the welcome page.
 
 ## Tools & Integration Points
 
