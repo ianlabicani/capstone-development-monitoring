@@ -7,7 +7,7 @@
                     <h1 class="text-3xl font-bold tracking-tight text-slate-900">{{ $team->name }}</h1>
                     <p class="mt-2 text-sm text-slate-600">Team progress and activity</p>
                 </div>
-                <a href="{{ route('capstone-teacher.dashboard') }}" class="inline-flex items-center justify-center rounded-lg border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-50">
+                <a href="{{ route('capstone-teacher.teams.index') }}" class="inline-flex items-center justify-center rounded-lg border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-50">
                     <i class="fas fa-arrow-left mr-2"></i> Back
                 </a>
             </div>

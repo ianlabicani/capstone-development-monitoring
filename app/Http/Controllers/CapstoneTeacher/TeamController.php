@@ -9,6 +9,33 @@ use Illuminate\View\View;
 
 class TeamController extends Controller
 {
+    public function index(): View
+    {
+        $teams = Team::with(['owner', 'repositories' => function ($query) {
+            $query->withCount('commits');
+        }])
+            ->get()
+            ->map(function ($team) {
+                $repositoryIds = $team->repositories->pluck('id');
+
+                $team->total_commits = $team->repositories->sum('commits_count');
+                $team->weekly_commits = $repositoryIds->isNotEmpty()
+                    ? Commit::whereIn('repository_id', $repositoryIds)
+                        ->where('committed_at', '>=', now()->subWeek())
+                        ->count()
+                    : 0;
+                $team->contributors_count = $repositoryIds->isNotEmpty()
+                    ? Commit::whereIn('repository_id', $repositoryIds)
+                        ->distinct('author_email')
+                        ->count('author_email')
+                    : 0;
+
+                return $team;
+            });
+
+        return view('capstone-teacher.teams.index', compact('teams'));
+    }
+
     public function show(Team $team): View
     {
         $team->load(['owner', 'repositories' => function ($query) {
@@ -39,7 +66,7 @@ class TeamController extends Controller
                 ->get()
             : collect();
 
-        return view('capstone-teacher.team.show', compact(
+        return view('capstone-teacher.teams.show', compact(
             'team',
             'totalCommits',
             'weeklyCommits',

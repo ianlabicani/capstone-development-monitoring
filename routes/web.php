@@ -102,8 +102,9 @@ Route::middleware(['auth', 'verified', 'role:capstone_teacher'])->prefix('capsto
     // Dashboard
     Route::get('dashboard', CapstoneTeacherDashboardController::class)->middleware('can:view dashboard')->name('dashboard');
 
-    // Team Progress Monitoring
-    Route::get('team/{team}', [CapstoneTeacherTeamController::class, 'show'])->middleware('can:view team progress')->name('team.show');
+    // Teams
+    Route::get('teams', [CapstoneTeacherTeamController::class, 'index'])->middleware('can:view team progress')->name('teams.index');
+    Route::get('teams/{team}', [CapstoneTeacherTeamController::class, 'show'])->middleware('can:view team progress')->name('teams.show');
 
     // Technical Advisers
     Route::get('technical-advisers', [CapstoneTeacherTechnicalAdviserController::class, 'index'])->middleware('can:manage technical advisers')->name('technical-advisers.index');

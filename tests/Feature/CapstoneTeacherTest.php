@@ -18,7 +18,7 @@ describe('Capstone Teacher Features', function () {
             $response = $this->actingAs($teacher)->get(route('capstone-teacher.dashboard'));
 
             expect($response->status())->toBe(200);
-            $response->assertSee('Team Monitoring');
+            $response->assertSee('Dashboard');
         });
 
         it('requires authentication for dashboard', function () {
@@ -42,7 +42,7 @@ describe('Capstone Teacher Features', function () {
             $teacher = User::factory()->capstoneTeacher()->create();
             $team = Team::factory()->withRepositories(2)->create();
 
-            $response = $this->actingAs($teacher)->get(route('capstone-teacher.team.show', $team));
+            $response = $this->actingAs($teacher)->get(route('capstone-teacher.teams.show', $team));
 
             expect($response->status())->toBe(200);
             $response->assertSee($team->name);
@@ -53,7 +53,7 @@ describe('Capstone Teacher Features', function () {
             $teacher = User::factory()->capstoneTeacher()->create();
             $team = Team::factory()->withRepositories(1)->create();
 
-            $response = $this->actingAs($teacher)->get(route('capstone-teacher.team.show', $team));
+            $response = $this->actingAs($teacher)->get(route('capstone-teacher.teams.show', $team));
 
             expect($response->status())->toBe(200);
             $response->assertSee('Total Commits');
