@@ -126,7 +126,7 @@ Route::prefix('leaderboard')->name('leaderboard.')->group(function () {
         ->name('teams');
     Route::get('contributors/{period?}', [LeaderboardController::class, 'contributors'])
         ->where('period', 'week|month|all')
-        ->defaults('period', 'week')
+        ->defaults('period', 'all')
         ->name('contributors');
 });
 
