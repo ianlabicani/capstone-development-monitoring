@@ -14,6 +14,7 @@ enum Permission: string
     case ViewContributors = 'view contributors';
     case ManageTeams = 'manage teams';
     case ManageTeamLeaders = 'manage team leaders';
+    case ManageTechnicalAdvisers = 'manage technical advisers';
     case RegisterRepository = 'register repository';
     case ManageRepository = 'manage repository';
 }
