@@ -18,6 +18,6 @@ class CapstoneTeacherSeeder extends Seeder
             'email' => 'teacher@example.com',
         ]);
 
-        $user->assignSingleRole(UserRole::CapstoneTeacher);
+        $user->assignRole(UserRole::CapstoneTeacher);
     }
 }

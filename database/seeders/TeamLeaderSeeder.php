@@ -18,6 +18,6 @@ class TeamLeaderSeeder extends Seeder
             'email' => 'teamleader@example.com',
         ]);
 
-        $user->assignSingleRole(UserRole::TeamLeader);
+        $user->assignRole(UserRole::TeamLeader);
     }
 }

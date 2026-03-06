@@ -48,7 +48,7 @@ class UserFactory extends Factory
      */
     public function admin(): static
     {
-        return $this->afterCreating(fn ($user) => $user->assignSingleRole(UserRole::Admin));
+        return $this->afterCreating(fn ($user) => $user->assignRole(UserRole::Admin));
     }
 
     /**
@@ -56,7 +56,7 @@ class UserFactory extends Factory
      */
     public function capstoneTeacher(): static
     {
-        return $this->afterCreating(fn ($user) => $user->assignSingleRole(UserRole::CapstoneTeacher));
+        return $this->afterCreating(fn ($user) => $user->assignRole(UserRole::CapstoneTeacher));
     }
 
     /**
@@ -64,7 +64,7 @@ class UserFactory extends Factory
      */
     public function technicalAdviser(): static
     {
-        return $this->afterCreating(fn ($user) => $user->assignSingleRole(UserRole::TechnicalAdviser));
+        return $this->afterCreating(fn ($user) => $user->assignRole(UserRole::TechnicalAdviser));
     }
 
     /**
@@ -72,6 +72,6 @@ class UserFactory extends Factory
      */
     public function teamLeader(): static
     {
-        return $this->afterCreating(fn ($user) => $user->assignSingleRole(UserRole::TeamLeader));
+        return $this->afterCreating(fn ($user) => $user->assignRole(UserRole::TeamLeader));
     }
 }

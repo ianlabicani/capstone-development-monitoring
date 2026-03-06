@@ -18,6 +18,6 @@ class TechnicalAdviserSeeder extends Seeder
             'email' => 'adviser@example.com',
         ]);
 
-        $user->assignSingleRole(UserRole::TechnicalAdviser);
+        $user->assignRole(UserRole::TechnicalAdviser);
     }
 }

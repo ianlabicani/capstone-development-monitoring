@@ -18,6 +18,6 @@ class AdminSeeder extends Seeder
             'email' => 'admin@example.com',
         ]);
 
-        $user->assignSingleRole(UserRole::Admin);
+        $user->assignRole(UserRole::Admin);
     }
 }

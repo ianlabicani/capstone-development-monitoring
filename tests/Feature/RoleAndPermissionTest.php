@@ -60,14 +60,16 @@ it('assigns correct permissions to team leader role', function () {
         ->toEqualCanonicalizing($expected);
 });
 
-it('enforces single role per user', function () {
+it('allows a user to have multiple roles', function () {
     $this->seed(\Database\Seeders\RoleAndPermissionSeeder::class);
 
     $user = User::factory()->create();
-    $user->assignSingleRole(UserRole::Admin);
-    $user->assignSingleRole(UserRole::TeamLeader);
+    $user->assignRole(UserRole::Admin);
+    $user->assignRole(UserRole::TeamLeader);
 
-    expect($user->getRoleNames()->toArray())->toBe([UserRole::TeamLeader->value]);
+    expect($user->getRoleNames())->toHaveCount(2)
+        ->and($user->hasRole(UserRole::Admin))->toBeTrue()
+        ->and($user->hasRole(UserRole::TeamLeader))->toBeTrue();
 });
 
 it('creates admin user via factory state', function () {

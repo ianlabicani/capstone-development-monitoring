@@ -3,7 +3,6 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -49,14 +48,5 @@ class User extends Authenticatable
             'password' => 'hashed',
             'must_change_password' => 'boolean',
         ];
-    }
-
-    /**
-     * Assign a single role, replacing any existing role.
-     * This application enforces one role per user.
-     */
-    public function assignSingleRole(UserRole|string $role): self
-    {
-        return $this->syncRoles([$role]);
     }
 }
