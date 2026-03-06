@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\TechnicalAdviserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TechnicalAdviser\TeamLeaderController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -28,6 +29,18 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('technical-advisers/{user}/edit', [TechnicalAdviserController::class, 'edit'])->middleware('can:manage users')->name('technical-advisers.edit');
     Route::patch('technical-advisers/{user}', [TechnicalAdviserController::class, 'update'])->middleware('can:manage users')->name('technical-advisers.update');
     Route::delete('technical-advisers/{user}', [TechnicalAdviserController::class, 'destroy'])->middleware('can:manage users')->name('technical-advisers.destroy');
+});
+
+// Technical Adviser Routes
+Route::middleware(['auth', 'verified'])->prefix('technical-adviser')->name('technical-adviser.')->group(function () {
+    // Team Leaders
+    Route::get('team-leaders', [TeamLeaderController::class, 'index'])->middleware('can:manage team leaders')->name('team-leaders.index');
+    Route::get('team-leaders/create', [TeamLeaderController::class, 'create'])->middleware('can:manage team leaders')->name('team-leaders.create');
+    Route::post('team-leaders', [TeamLeaderController::class, 'store'])->middleware('can:manage team leaders')->name('team-leaders.store');
+    Route::get('team-leaders/{user}', [TeamLeaderController::class, 'show'])->middleware('can:manage team leaders')->name('team-leaders.show');
+    Route::get('team-leaders/{user}/edit', [TeamLeaderController::class, 'edit'])->middleware('can:manage team leaders')->name('team-leaders.edit');
+    Route::patch('team-leaders/{user}', [TeamLeaderController::class, 'update'])->middleware('can:manage team leaders')->name('team-leaders.update');
+    Route::delete('team-leaders/{user}', [TeamLeaderController::class, 'destroy'])->middleware('can:manage team leaders')->name('team-leaders.destroy');
 });
 
 require __DIR__.'/auth.php';

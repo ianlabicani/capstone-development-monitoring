@@ -13,6 +13,7 @@ enum Permission: string
     case ViewPullRequests = 'view pull requests';
     case ViewContributors = 'view contributors';
     case ManageTeams = 'manage teams';
+    case ManageTeamLeaders = 'manage team leaders';
     case RegisterRepository = 'register repository';
     case ManageRepository = 'manage repository';
 }

@@ -42,6 +42,7 @@ enum UserRole: string
                 Permission::ViewBranchActivity,
                 Permission::ViewPullRequests,
                 Permission::ViewContributors,
+                Permission::ManageTeamLeaders,
             ],
             self::TeamLeader => [
                 Permission::ViewDashboard,
