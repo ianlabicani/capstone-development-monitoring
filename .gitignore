@@ -17,6 +17,7 @@
 /public/hot
 /public/storage
 /bootstrap/cache/*
+/storage
 /vendor
 Homestead.json
 Homestead.yaml
