@@ -39,9 +39,6 @@
                             <a href="{{ route('dashboard') }}" class="text-sm font-medium text-slate-600 hover:text-slate-900">Dashboard</a>
                         @else
                             <a href="{{ route('login') }}" class="text-sm font-medium text-slate-600 hover:text-slate-900">Log in</a>
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="inline-flex items-center justify-center rounded-lg bg-orange-600 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300">Register</a>
-                            @endif
                         @endauth
                     </div>
 
@@ -63,9 +60,6 @@
                         <a href="{{ route('dashboard') }}" class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">Dashboard</a>
                     @else
                         <a href="{{ route('login') }}" class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">Log in</a>
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="block rounded-lg px-3 py-2 text-sm font-semibold text-center bg-orange-600 text-white hover:bg-orange-700">Register</a>
-                        @endif
                     @endauth
                 </div>
             </div>
