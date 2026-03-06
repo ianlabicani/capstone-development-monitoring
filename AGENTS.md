@@ -58,6 +58,15 @@ This project has domain-specific skills available. You MUST activate the relevan
 
 - Be concise in your explanations - focus on what's important rather than explaining obvious details.
 
+## Admin Features
+
+- **Role & Permission Management**: Admins can manage system roles and their permissions at `/admin/roles`
+  - View all roles with permission counts
+  - View individual role details with all assigned permissions
+  - Edit role permissions via checkboxes to add/remove permissions dynamically
+  - Requires `manage system` permission
+  - Uses Spatie Laravel Permission for role/permission syncing
+
 === boost rules ===
 
 # Laravel Boost
