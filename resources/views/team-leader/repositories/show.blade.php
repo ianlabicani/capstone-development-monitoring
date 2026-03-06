@@ -152,12 +152,15 @@
                             <p class="text-sm text-slate-600">This will permanently delete all synced commits for this repository.</p>
                         </div>
                         <button
-                            onclick="if (confirm('Are you sure you want to remove this repository? All synced commits will be deleted.')) { document.getElementById('delete-repo-form').submit(); }"
+                            type="button"
+                            @click="$dispatch('open-modal', 'delete-repo')"
                             class="inline-flex items-center rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700"
                         >
                             <i class="fas fa-trash-alt mr-2"></i> Remove
                         </button>
-                        <form id="delete-repo-form" action="{{ route('team-leader.repositories.destroy', $repository) }}" method="POST" class="hidden">
+                        <form id="delete-repo-form" action="{{ route('team-leader.repositories.destroy', $repository) }}" method="POST" class="hidden"
+                              @confirm-action.window="$event.detail === 'delete-repo' && this.submit()"
+                        >
                             @csrf
                             @method('DELETE')
                         </form>
@@ -166,4 +169,12 @@
             </div>
         </div>
     </div>
+
+    <x-confirm-modal
+        name="delete-repo"
+        title="Remove Repository"
+        message="Are you sure you want to remove this repository? All synced commits will be permanently deleted. This action cannot be undone."
+        confirmText="Remove"
+        confirmClass="bg-red-600 hover:bg-red-700"
+    />
 </x-app-layout>

@@ -55,14 +55,15 @@
                                             @endif
                                         </td>
                                         <td class="px-6 py-4 text-sm text-right">
-                                            <div class="flex items-center justify-end gap-2">
+                                            <div class="flex items-center justify-end gap-2" 
+                                                 @confirm-action.window="$event.detail === 'delete-adviser-{{ $adviser->id }}' && document.getElementById('delete-form-{{ $adviser->id }}').submit()"
+                                            >
                                                 <a href="{{ route('admin.technical-advisers.edit', $adviser) }}" class="text-orange-600 hover:text-orange-700 font-semibold">
                                                     <i class="fas fa-edit"></i> Edit
                                                 </a>
                                                 <button
-                                                    onclick="if (confirm('Are you sure you want to delete this technical adviser?')) {
-                                                        document.getElementById('delete-form-{{ $adviser->id }}').submit();
-                                                    }"
+                                                    type="button"
+                                                    @click="$dispatch('open-modal', 'delete-adviser-{{ $adviser->id }}')"
                                                     class="text-red-600 hover:text-red-700 font-semibold"
                                                 >
                                                     <i class="fas fa-trash-alt"></i> Delete
@@ -90,4 +91,16 @@
             </div>
         </div>
     </div>
+
+    @foreach ($technicalAdvisers as $adviser)
+        <x-confirm-modal
+            name="delete-adviser-{{ $adviser->id }}"
+            title="Delete Technical Adviser"
+            message="Are you sure you want to delete {{ $adviser->name }}? This action cannot be undone."
+            confirmText="Delete"
+            confirmClass="bg-red-600 hover:bg-red-700"
+            @click.away="show = false"
+            x-on:confirm="document.getElementById('delete-form-{{ $adviser->id }}').submit()"
+        />
+    @endforeach
 </x-app-layout>

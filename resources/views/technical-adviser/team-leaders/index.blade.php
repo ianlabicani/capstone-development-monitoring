@@ -55,14 +55,15 @@
                                             @endif
                                         </td>
                                         <td class="px-6 py-4 text-sm text-right">
-                                            <div class="flex items-center justify-end gap-2">
+                                            <div class="flex items-center justify-end gap-2" 
+                                                 @confirm-action.window="$event.detail === 'delete-leader-{{ $leader->id }}' && document.getElementById('delete-form-{{ $leader->id }}').submit()"
+                                            >
                                                 <a href="{{ route('technical-adviser.team-leaders.edit', $leader) }}" class="text-orange-600 hover:text-orange-700 font-semibold">
                                                     <i class="fas fa-edit"></i> Edit
                                                 </a>
                                                 <button
-                                                    onclick="if (confirm('Are you sure you want to delete this team leader?')) {
-                                                        document.getElementById('delete-form-{{ $leader->id }}').submit();
-                                                    }"
+                                                    type="button"
+                                                    @click="$dispatch('open-modal', 'delete-leader-{{ $leader->id }}')"
                                                     class="text-red-600 hover:text-red-700 font-semibold"
                                                 >
                                                     <i class="fas fa-trash-alt"></i> Delete
@@ -90,4 +91,14 @@
             </div>
         </div>
     </div>
+
+    @foreach ($teamLeaders as $leader)
+        <x-confirm-modal
+            name="delete-leader-{{ $leader->id }}"
+            title="Delete Team Leader"
+            message="Are you sure you want to delete {{ $leader->name }}? This action cannot be undone."
+            confirmText="Delete"
+            confirmClass="bg-red-600 hover:bg-red-700"
+        />
+    @endforeach
 </x-app-layout>
