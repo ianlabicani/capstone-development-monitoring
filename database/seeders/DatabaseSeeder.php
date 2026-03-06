@@ -11,12 +11,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
-            RoleAndPermissionSeeder::class,
-            AdminSeeder::class,
-            CapstoneTeacherSeeder::class,
-            TechnicalAdviserSeeder::class,
-            TeamLeaderSeeder::class,
-        ]);
+        if (app()->environment('production')) {
+            // Production: Only seed roles, permissions, and admin account
+            $this->call([
+                RoleAndPermissionSeeder::class,
+                AdminSeeder::class,
+            ]);
+        } else {
+            // Development: Seed all demo data
+            $this->call([
+                RoleAndPermissionSeeder::class,
+                AdminSeeder::class,
+                CapstoneTeacherSeeder::class,
+                TechnicalAdviserSeeder::class,
+                TeamLeaderSeeder::class,
+            ]);
+        }
     }
 }
