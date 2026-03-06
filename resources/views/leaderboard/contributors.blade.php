@@ -33,7 +33,11 @@
                                 <div class="relative">
                                     <img src="https://github.com/{{ $contributor->author_login }}.png?size=80"
                                          alt="{{ $contributor->author_name }}"
-                                         class="w-16 h-16 rounded-full border-4 border-orange-100">
+                                         class="w-16 h-16 rounded-full border-4 border-orange-100"
+                                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                                    <div class="w-16 h-16 rounded-full border-4 border-orange-100 bg-orange-100 items-center justify-center text-xl font-bold text-orange-600" style="display:none;">
+                                        {{ strtoupper(substr($contributor->author_name, 0, 1)) }}
+                                    </div>
                                     <div class="absolute -top-2 -right-2 w-8 h-8 bg-orange-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
                                         #{{ $rank + 1 }}
                                     </div>
@@ -42,20 +46,20 @@
 
                             <!-- Info -->
                             <h3 class="text-lg font-semibold text-slate-900">{{ $contributor->author_name }}</h3>
-                            <p class="text-sm text-slate-500 mb-4">@{{ $contributor->author_login }}</p>
+                            <p class="text-sm text-slate-500 mb-4">{{ '@' . $contributor->author_login }}</p>
 
                             <!-- Stats -->
-                            <div class="space-y-2 mb-6">
-                                <div class="flex items-center justify-center gap-2">
-                                    <i class="fas fa-code text-orange-600"></i>
-                                    <span class="text-2xl font-bold text-slate-900">{{ $contributor->commit_count }}</span>
-                                    <span class="text-sm text-slate-500">commits</span>
+                            <div class="flex items-center justify-center gap-4 mb-6">
+                                <div class="text-center">
+                                    <span class="block text-2xl font-bold text-slate-900">{{ $contributor->commit_count }}</span>
+                                    <span class="text-xs text-slate-500">Commits</span>
                                 </div>
 
                                 @if ($contributor->streak > 0)
-                                    <div class="flex items-center justify-center gap-2">
-                                        <i class="fas fa-fire text-orange-500"></i>
-                                        <span class="font-semibold text-slate-900">{{ $contributor->streak }}-day streak</span>
+                                    <div class="h-8 w-px bg-slate-200"></div>
+                                    <div class="text-center">
+                                        <span class="block text-2xl font-bold text-orange-600"><i class="fas fa-fire text-lg"></i> {{ $contributor->streak }}</span>
+                                        <span class="text-xs text-slate-500">Day Streak</span>
                                     </div>
                                 @endif
                             </div>
