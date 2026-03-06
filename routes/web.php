@@ -1,6 +1,9 @@
 <?php
 
-use App\Http\Controllers\Admin\TechnicalAdviserController;
+use App\Http\Controllers\Admin\TechnicalAdviserController as AdminTechnicalAdviserController;
+use App\Http\Controllers\CapstoneTeacher\DashboardController as CapstoneTeacherDashboardController;
+use App\Http\Controllers\CapstoneTeacher\TeamController as CapstoneTeacherTeamController;
+use App\Http\Controllers\CapstoneTeacher\TechnicalAdviserController as CapstoneTeacherTechnicalAdviserController;
 use App\Http\Controllers\LeaderboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
@@ -28,13 +31,13 @@ Route::middleware('auth')->group(function () {
 // Admin Routes
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     // Technical Advisers
-    Route::get('technical-advisers', [TechnicalAdviserController::class, 'index'])->middleware('can:manage users')->name('technical-advisers.index');
-    Route::get('technical-advisers/create', [TechnicalAdviserController::class, 'create'])->middleware('can:manage users')->name('technical-advisers.create');
-    Route::post('technical-advisers', [TechnicalAdviserController::class, 'store'])->middleware('can:manage users')->name('technical-advisers.store');
-    Route::get('technical-advisers/{user}', [TechnicalAdviserController::class, 'show'])->middleware('can:manage users')->name('technical-advisers.show');
-    Route::get('technical-advisers/{user}/edit', [TechnicalAdviserController::class, 'edit'])->middleware('can:manage users')->name('technical-advisers.edit');
-    Route::patch('technical-advisers/{user}', [TechnicalAdviserController::class, 'update'])->middleware('can:manage users')->name('technical-advisers.update');
-    Route::delete('technical-advisers/{user}', [TechnicalAdviserController::class, 'destroy'])->middleware('can:manage users')->name('technical-advisers.destroy');
+    Route::get('technical-advisers', [AdminTechnicalAdviserController::class, 'index'])->middleware('can:manage users')->name('technical-advisers.index');
+    Route::get('technical-advisers/create', [AdminTechnicalAdviserController::class, 'create'])->middleware('can:manage users')->name('technical-advisers.create');
+    Route::post('technical-advisers', [AdminTechnicalAdviserController::class, 'store'])->middleware('can:manage users')->name('technical-advisers.store');
+    Route::get('technical-advisers/{user}', [AdminTechnicalAdviserController::class, 'show'])->middleware('can:manage users')->name('technical-advisers.show');
+    Route::get('technical-advisers/{user}/edit', [AdminTechnicalAdviserController::class, 'edit'])->middleware('can:manage users')->name('technical-advisers.edit');
+    Route::patch('technical-advisers/{user}', [AdminTechnicalAdviserController::class, 'update'])->middleware('can:manage users')->name('technical-advisers.update');
+    Route::delete('technical-advisers/{user}', [AdminTechnicalAdviserController::class, 'destroy'])->middleware('can:manage users')->name('technical-advisers.destroy');
 });
 
 // Technical Adviser Routes
@@ -72,6 +75,24 @@ Route::middleware(['auth', 'verified', 'permission:register repository'])->prefi
     Route::get('repositories/{repository}', [RepositoryController::class, 'show'])->name('repositories.show');
     Route::post('repositories/{repository}/sync', [RepositoryController::class, 'sync'])->name('repositories.sync');
     Route::delete('repositories/{repository}', [RepositoryController::class, 'destroy'])->name('repositories.destroy');
+});
+
+// Capstone Teacher Routes
+Route::middleware(['auth', 'verified', 'role:capstone_teacher'])->prefix('capstone-teacher')->name('capstone-teacher.')->group(function () {
+    // Dashboard
+    Route::get('dashboard', CapstoneTeacherDashboardController::class)->middleware('can:view dashboard')->name('dashboard');
+
+    // Team Progress Monitoring
+    Route::get('team/{team}', [CapstoneTeacherTeamController::class, 'show'])->middleware('can:view team progress')->name('team.show');
+
+    // Technical Advisers
+    Route::get('technical-advisers', [CapstoneTeacherTechnicalAdviserController::class, 'index'])->middleware('can:manage team leaders')->name('technical-advisers.index');
+    Route::get('technical-advisers/create', [CapstoneTeacherTechnicalAdviserController::class, 'create'])->middleware('can:manage team leaders')->name('technical-advisers.create');
+    Route::post('technical-advisers', [CapstoneTeacherTechnicalAdviserController::class, 'store'])->middleware('can:manage team leaders')->name('technical-advisers.store');
+    Route::get('technical-advisers/{user}', [CapstoneTeacherTechnicalAdviserController::class, 'show'])->middleware('can:manage team leaders')->name('technical-advisers.show');
+    Route::get('technical-advisers/{user}/edit', [CapstoneTeacherTechnicalAdviserController::class, 'edit'])->middleware('can:manage team leaders')->name('technical-advisers.edit');
+    Route::patch('technical-advisers/{user}', [CapstoneTeacherTechnicalAdviserController::class, 'update'])->middleware('can:manage team leaders')->name('technical-advisers.update');
+    Route::delete('technical-advisers/{user}', [CapstoneTeacherTechnicalAdviserController::class, 'destroy'])->middleware('can:manage team leaders')->name('technical-advisers.destroy');
 });
 
 // Public Project Pages

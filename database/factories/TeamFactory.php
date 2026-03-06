@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Repository;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -26,5 +27,17 @@ class TeamFactory extends Factory
             'slug' => Str::slug($name),
             'description' => fake()->optional()->sentence(),
         ];
+    }
+
+    /**
+     * Create a team with associated repositories.
+     */
+    public function withRepositories(int $count = 1): self
+    {
+        return $this->afterCreating(function ($team) use ($count) {
+            Repository::factory()->count($count)->create([
+                'team_id' => $team->id,
+            ]);
+        });
     }
 }

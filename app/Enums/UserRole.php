@@ -34,6 +34,7 @@ enum UserRole: string
                 Permission::ViewPullRequests,
                 Permission::ViewContributors,
                 Permission::ManageTeams,
+                Permission::ManageTeamLeaders,
             ],
             self::TechnicalAdviser => [
                 Permission::ViewDashboard,
