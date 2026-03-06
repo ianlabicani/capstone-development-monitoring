@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\TechnicalAdviserController as AdminTechnicalAdviserController;
 use App\Http\Controllers\CapstoneTeacher\DashboardController as CapstoneTeacherDashboardController;
 use App\Http\Controllers\CapstoneTeacher\TeamController as CapstoneTeacherTeamController;
@@ -29,6 +30,12 @@ Route::middleware('auth')->group(function () {
 
 // Admin Routes
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+    // Roles & Permissions
+    Route::get('roles', [RoleController::class, 'index'])->middleware('can:manage system')->name('roles.index');
+    Route::get('roles/{role}', [RoleController::class, 'show'])->middleware('can:manage system')->name('roles.show');
+    Route::get('roles/{role}/edit', [RoleController::class, 'edit'])->middleware('can:manage system')->name('roles.edit');
+    Route::patch('roles/{role}', [RoleController::class, 'update'])->middleware('can:manage system')->name('roles.update');
+
     // Technical Advisers
     Route::get('technical-advisers', [AdminTechnicalAdviserController::class, 'index'])->middleware('can:manage users')->name('technical-advisers.index');
     Route::get('technical-advisers/create', [AdminTechnicalAdviserController::class, 'create'])->middleware('can:manage users')->name('technical-advisers.create');

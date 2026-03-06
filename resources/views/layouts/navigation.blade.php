@@ -35,6 +35,11 @@
                             {{ __('Technical Advisers') }}
                         </a>
                     @endcan
+                    @can('manage system')
+                        <a href="{{ route('admin.roles.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out {{ request()->routeIs('admin.roles.*') ? 'border-orange-500 text-slate-900 focus:border-orange-700' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 focus:text-slate-700 focus:border-slate-300' }}">
+                            {{ __('Roles & Permissions') }}
+                        </a>
+                    @endcan
                     @if(Auth::user()->hasRole('capstone_teacher'))
                         <a href="{{ route('capstone-teacher.technical-advisers.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out {{ request()->routeIs('capstone-teacher.technical-advisers.*') ? 'border-orange-500 text-slate-900 focus:border-orange-700' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 focus:text-slate-700 focus:border-slate-300' }}">
                             {{ __('Technical Advisers') }}
@@ -126,6 +131,11 @@
             @can('manage users')
                 <a href="{{ route('admin.technical-advisers.index') }}" class="block w-full ps-3 pe-4 py-2 border-l-4 text-start text-base font-medium transition duration-150 ease-in-out {{ request()->routeIs('admin.technical-advisers.*') ? 'border-orange-500 text-orange-700 bg-orange-50 focus:text-orange-800 focus:bg-orange-100 focus:border-orange-700' : 'border-transparent text-slate-600 hover:text-slate-800 hover:bg-slate-50 hover:border-slate-300 focus:text-slate-800 focus:bg-slate-50 focus:border-slate-300' }}">
                     {{ __('Technical Advisers') }}
+                </a>
+            @endcan
+            @can('manage system')
+                <a href="{{ route('admin.roles.index') }}" class="block w-full ps-3 pe-4 py-2 border-l-4 text-start text-base font-medium transition duration-150 ease-in-out {{ request()->routeIs('admin.roles.*') ? 'border-orange-500 text-orange-700 bg-orange-50 focus:text-orange-800 focus:bg-orange-100 focus:border-orange-700' : 'border-transparent text-slate-600 hover:text-slate-800 hover:bg-slate-50 hover:border-slate-300 focus:text-slate-800 focus:bg-slate-50 focus:border-slate-300' }}">
+                    {{ __('Roles & Permissions') }}
                 </a>
             @endcan
             @if(Auth::user()->hasRole('technical_adviser'))
