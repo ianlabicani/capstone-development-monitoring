@@ -1,7 +1,36 @@
 <x-guest-layout>
-    <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 bg-slate-50">
-        <div class="w-full max-w-md bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-8">
-            <h2 class="text-2xl font-bold text-slate-900 text-center mb-6">{{ __('Create an account') }}</h2>
+    <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 bg-gradient-to-br from-slate-50 to-emerald-50">
+        <div class="w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+            {{-- Welcome Section --}}
+            <div class="md:block hidden">
+                <div class="mb-8">
+                    <div class="w-14 h-14 bg-emerald-100 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-user-plus text-2xl text-emerald-600"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">Join Capstone<span class="text-orange-600">Monitor</span></h2>
+                    <p class="text-lg text-slate-600 mb-6">Register your capstone team and start tracking your development progress today.</p>
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-emerald-50 rounded-lg p-4 border border-emerald-200">
+                        <h4 class="font-semibold text-slate-900 mb-2 flex items-center gap-2">
+                            <i class="fas fa-people-group text-emerald-600"></i>
+                            For Capstone Teams
+                        </h4>
+                        <p class="text-sm text-slate-600">Connect your GitHub repository and monitor your team's commits, branches, and pull requests automatically.</p>
+                    </div>
+                    <div class="bg-orange-50 rounded-lg p-4 border border-orange-200">
+                        <h4 class="font-semibold text-slate-900 mb-2 flex items-center gap-2">
+                            <i class="fas fa-chalkboard-user text-orange-600"></i>
+                            For Advisers & Teachers
+                        </h4>
+                        <p class="text-sm text-slate-600">Monitor multiple teams, track development frequency, and identify struggling or inactive teams early.</p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Registration Form --}}
+            <div class="w-full bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-8">
+                <h2 class="text-2xl font-bold text-slate-900 text-center mb-6">{{ __('Create an account') }}</h2>
 
             <form method="POST" action="{{ route('register') }}" x-data="{ loading: false }" @submit="loading = true">
                 @csrf
@@ -62,6 +91,7 @@
                     <a href="{{ route('login') }}" class="text-orange-600 hover:text-orange-700 font-medium">{{ __('Log in') }}</a>
                 </div>
             </form>
+            </div>
         </div>
     </div>
 </x-guest-layout>

@@ -1,7 +1,40 @@
 <x-guest-layout>
-    <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 bg-slate-50">
-        <div class="w-full max-w-md bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-8">
-            <h2 class="text-2xl font-bold text-slate-900 text-center mb-6">{{ __('Log in') }}</h2>
+    <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 bg-gradient-to-br from-slate-50 to-orange-50">
+        <div class="w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            {{-- Welcome Section --}}
+            <div class="md:block hidden">
+                <div class="mb-8">
+                    <div class="w-14 h-14 bg-orange-100 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-code text-2xl text-orange-600"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">Capstone<span class="text-orange-600">Monitor</span></h2>
+                    <p class="text-lg text-slate-600 mb-6">Track your team's development progress with real-time GitHub activity monitoring.</p>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-3">
+                        <div class="w-5 h-5 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0 mt-1">
+                            <i class="fas fa-check text-orange-600 text-xs"></i>
+                        </div>
+                        <p class="text-slate-700 text-sm"><span class="font-semibold">Automatic Tracking:</span> GitHub activity synced in real-time</p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-5 h-5 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0 mt-1">
+                            <i class="fas fa-check text-orange-600 text-xs"></i>
+                        </div>
+                        <p class="text-slate-700 text-sm"><span class="font-semibold">Team Dashboards:</span> Monitor commits, branches, and PRs</p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-5 h-5 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0 mt-1">
+                            <i class="fas fa-check text-orange-600 text-xs"></i>
+                        </div>
+                        <p class="text-slate-700 text-sm"><span class="font-semibold">Full Transparency:</span> Every contribution is visible</p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Login Form --}}
+            <div class="w-full bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-8">
+                <h2 class="text-2xl font-bold text-slate-900 text-center mb-6">{{ __('Log in') }}</h2>
 
             {{-- Session Status --}}
             @if (session('status'))
@@ -64,6 +97,7 @@
                     @endif
                 </div>
             </form>
+            </div>
         </div>
     </div>
 </x-guest-layout>

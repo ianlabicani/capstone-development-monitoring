@@ -1,8 +1,44 @@
 <x-guest-layout>
-    <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 bg-slate-50">
-        <div class="w-full max-w-md bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-8">
-            <h2 class="text-2xl font-bold text-slate-900 text-center mb-2">{{ __('Forgot Password') }}</h2>
-            <p class="text-sm text-slate-600 text-center mb-6">{{ __('Enter your email and we\'ll send you a password reset link.') }}</p>
+    <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 bg-gradient-to-br from-slate-50 to-blue-50">
+        <div class="w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            {{-- Help Section --}}
+            <div class="md:block hidden">
+                <div class="mb-8">
+                    <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-lock text-2xl text-blue-600"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">Password Reset</h2>
+                    <p class="text-lg text-slate-600 mb-6">Don't worry, we've got you covered. Follow these simple steps to regain access to your account.</p>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center flex-shrink-0 font-semibold">1</div>
+                        <div>
+                            <h4 class="font-semibold text-slate-900">Enter Your Email</h4>
+                            <p class="text-sm text-slate-600">Provide the email address associated with your account.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center flex-shrink-0 font-semibold">2</div>
+                        <div>
+                            <h4 class="font-semibold text-slate-900">Check Your Email</h4>
+                            <p class="text-sm text-slate-600">We'll send you a secure link to reset your password.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center flex-shrink-0 font-semibold">3</div>
+                        <div>
+                            <h4 class="font-semibold text-slate-900">Set New Password</h4>
+                            <p class="text-sm text-slate-600">Click the link and create a new, secure password.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Reset Form --}}
+            <div class="w-full bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-8">
+                <h2 class="text-2xl font-bold text-slate-900 text-center mb-2">{{ __('Forgot Password') }}</h2>
+                <p class="text-sm text-slate-600 text-center mb-6">{{ __('Enter your email and we\'ll send you a password reset link.') }}</p>
 
             {{-- Session Status --}}
             @if (session('status'))
@@ -39,6 +75,7 @@
                     <a href="{{ route('login') }}" class="text-orange-600 hover:text-orange-700 font-medium">{{ __('Back to login') }}</a>
                 </div>
             </form>
+            </div>
         </div>
     </div>
 </x-guest-layout>

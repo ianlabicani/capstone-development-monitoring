@@ -315,14 +315,13 @@
                     <div class="space-y-2 text-sm text-slate-400">
                         <p class="hover:text-orange-600 transition cursor-pointer">Cagayan State University - Aparri Campus</p>
                         <p class="hover:text-orange-600 transition cursor-pointer">Office of the Campus Executive Officer</p>
-                        <p class="hover:text-orange-600 transition cursor-pointer">The Aquarius - Official Student Publication</p>
                     </div>
                 </div>
             </div>
 
             {{-- Divider --}}
             <div class="border-t border-slate-800 pt-8">
-                <p class="text-center text-sm text-slate-500">&copy; 2019 Cagayan State University. All rights reserved.</p>
+                <p class="text-center text-sm text-slate-500">&copy; 2026 Cagayan State University. All rights reserved.</p>
             </div>
         </div>
     </footer>

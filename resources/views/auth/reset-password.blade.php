@@ -1,7 +1,44 @@
 <x-guest-layout>
-    <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 bg-slate-50">
-        <div class="w-full max-w-md bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-8">
-            <h2 class="text-2xl font-bold text-slate-900 text-center mb-6">{{ __('Reset Password') }}</h2>
+    <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 bg-gradient-to-br from-slate-50 to-purple-50">
+        <div class="w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            {{-- Security Section --}}
+            <div class="md:block hidden">
+                <div class="mb-8">
+                    <div class="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-shield-alt text-2xl text-purple-600"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">Create a New Password</h2>
+                    <p class="text-lg text-slate-600 mb-6">Choose a strong password to protect your account and keep your capstone team's data secure.</p>
+                </div>
+                <div class="bg-purple-50 rounded-lg p-6 border border-purple-200">
+                    <h4 class="font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                        <i class="fas fa-check-circle text-purple-600"></i>
+                        Password Tips
+                    </h4>
+                    <ul class="space-y-2 text-sm text-slate-600">
+                        <li class="flex items-center gap-2">
+                            <span class="text-purple-600">✓</span>
+                            <span>At least 8 characters long</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="text-purple-600">✓</span>
+                            <span>Mix of uppercase and lowercase letters</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="text-purple-600">✓</span>
+                            <span>Include numbers and special characters</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="text-purple-600">✓</span>
+                            <span>Avoid using personal information</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            {{-- Reset Form --}}
+            <div class="w-full bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-8">
+                <h2 class="text-2xl font-bold text-slate-900 text-center mb-6">{{ __('Reset Password') }}</h2>
 
             <form method="POST" action="{{ route('password.store') }}" x-data="{ loading: false }" @submit="loading = true">
                 @csrf
@@ -48,6 +85,7 @@
                     </button>
                 </div>
             </form>
+            </div>
         </div>
     </div>
 </x-guest-layout>
