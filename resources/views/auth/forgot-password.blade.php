@@ -1,32 +1,32 @@
 <x-guest-layout>
-    <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 bg-gradient-to-br from-slate-50 to-blue-50">
+    <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 bg-gradient-to-br from-slate-50 to-orange-50">
         <div class="w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             {{-- Help Section --}}
             <div class="md:block hidden">
                 <div class="mb-8">
-                    <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center mb-6">
-                        <i class="fas fa-lock text-2xl text-blue-600"></i>
+                    <div class="w-14 h-14 bg-orange-100 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-lock text-2xl text-orange-600"></i>
                     </div>
                     <h2 class="text-3xl font-bold text-slate-900 mb-4">Password Reset</h2>
                     <p class="text-lg text-slate-600 mb-6">Don't worry, we've got you covered. Follow these simple steps to regain access to your account.</p>
                 </div>
                 <div class="space-y-4">
                     <div class="flex items-start gap-4">
-                        <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center flex-shrink-0 font-semibold">1</div>
+                        <div class="w-8 h-8 rounded-full bg-orange-600 text-white flex items-center justify-center flex-shrink-0 font-semibold">1</div>
                         <div>
                             <h4 class="font-semibold text-slate-900">Enter Your Email</h4>
                             <p class="text-sm text-slate-600">Provide the email address associated with your account.</p>
                         </div>
                     </div>
                     <div class="flex items-start gap-4">
-                        <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center flex-shrink-0 font-semibold">2</div>
+                        <div class="w-8 h-8 rounded-full bg-orange-600 text-white flex items-center justify-center flex-shrink-0 font-semibold">2</div>
                         <div>
                             <h4 class="font-semibold text-slate-900">Check Your Email</h4>
                             <p class="text-sm text-slate-600">We'll send you a secure link to reset your password.</p>
                         </div>
                     </div>
                     <div class="flex items-start gap-4">
-                        <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center flex-shrink-0 font-semibold">3</div>
+                        <div class="w-8 h-8 rounded-full bg-orange-600 text-white flex items-center justify-center flex-shrink-0 font-semibold">3</div>
                         <div>
                             <h4 class="font-semibold text-slate-900">Set New Password</h4>
                             <p class="text-sm text-slate-600">Click the link and create a new, secure password.</p>

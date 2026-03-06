@@ -18,9 +18,9 @@
                         </h4>
                         <p class="text-sm text-slate-600">Look for an email from us with the verification link.</p>
                     </div>
-                    <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                    <div class="bg-orange-50 rounded-lg p-4 border border-orange-200">
                         <h4 class="font-semibold text-slate-900 mb-2 flex items-center gap-2">
-                            <i class="fas fa-spam text-blue-600"></i>
+                            <i class="fas fa-spam text-orange-600"></i>
                             Check Spam Folder
                         </h4>
                         <p class="text-sm text-slate-600">Sometimes our email might end up in your spam folder. Check there if you don't see it.</p>
