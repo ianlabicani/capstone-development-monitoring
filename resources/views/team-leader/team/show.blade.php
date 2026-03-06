@@ -7,9 +7,14 @@
                     <h1 class="text-3xl font-bold tracking-tight text-slate-900">{{ $team->name }}</h1>
                     <p class="mt-2 text-sm text-slate-600">{{ $team->description ?? 'No description yet' }}</p>
                 </div>
-                <a href="{{ route('team-leader.team.edit') }}" class="inline-flex items-center justify-center rounded-lg bg-orange-600 px-6 py-3 text-sm font-semibold text-white hover:bg-orange-700">
-                    <i class="fas fa-edit mr-2"></i> Edit Team
-                </a>
+                <div class="flex gap-2">
+                    <a href="{{ route('projects.show', $team->slug) }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center rounded-lg border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-50">
+                        <i class="fas fa-external-link-alt mr-2"></i> Public Page
+                    </a>
+                    <a href="{{ route('team-leader.team.edit') }}" class="inline-flex items-center justify-center rounded-lg bg-orange-600 px-6 py-3 text-sm font-semibold text-white hover:bg-orange-700">
+                        <i class="fas fa-edit mr-2"></i> Edit Team
+                    </a>
+                </div>
             </div>
 
             {{-- Flash Messages --}}

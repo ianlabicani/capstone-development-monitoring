@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\TechnicalAdviserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TeamLeader\DashboardController;
 use App\Http\Controllers\TeamLeader\RepositoryController;
 use App\Http\Controllers\TeamLeader\TeamController;
 use App\Http\Controllers\TechnicalAdviser\TeamLeaderController;
@@ -47,6 +49,9 @@ Route::middleware(['auth', 'verified'])->prefix('technical-adviser')->name('tech
 
 // Team Leader Routes
 Route::middleware(['auth', 'verified', 'permission:register repository'])->prefix('team-leader')->name('team-leader.')->group(function () {
+    // Dashboard
+    Route::get('dashboard', DashboardController::class)->name('dashboard');
+
     // Team Setup
     Route::get('team/create', [TeamController::class, 'create'])->name('team.create');
     Route::post('team', [TeamController::class, 'store'])->name('team.store');
@@ -62,5 +67,8 @@ Route::middleware(['auth', 'verified', 'permission:register repository'])->prefi
     Route::post('repositories/{repository}/sync', [RepositoryController::class, 'sync'])->name('repositories.sync');
     Route::delete('repositories/{repository}', [RepositoryController::class, 'destroy'])->name('repositories.destroy');
 });
+
+// Public Project Pages
+Route::get('projects/{slug}', [ProjectController::class, 'show'])->name('projects.show');
 
 require __DIR__.'/auth.php';
