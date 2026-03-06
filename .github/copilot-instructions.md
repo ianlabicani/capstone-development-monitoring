@@ -27,6 +27,7 @@ A web-based Laravel 12 application that integrates with GitHub repositories to m
 - **Testing**: Execute `php artisan test --compact` for all tests; filter with `--filter=testName`
 - **Code formatting**: Apply `vendor/bin/pint --dirty --format agent` before commits
 - **Frontend builds**: Run `npm run build` for production assets; `npm run dev` for development
+- **⚠️ NEVER use `php artisan migrate:fresh`** — This command drops all tables and data. Use `php artisan migrate:rollback` or create targeted rollback migrations instead. Only use `migrate:fresh` if explicitly instructed by the user in a development/testing scenario where data loss is acceptable.
 
 ## Issue & PR Workflow
 
