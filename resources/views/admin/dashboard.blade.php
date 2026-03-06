@@ -28,7 +28,7 @@
                             <div>
                                 <p class="text-slate-600 text-sm font-medium">{{ __('Capstone Teachers') }}</p>
                                 <p class="text-3xl font-bold text-slate-900 mt-1">
-                                    {{ \App\Models\User::whereHas('roles', fn($q) => $q->where('name', 'capstone_teacher'))->count() }}
+                                    {{ $capstoneTeachersCount }}
                                 </p>
                             </div>
                             <div class="p-3 bg-green-100 rounded-lg">
@@ -48,7 +48,7 @@
                             <div>
                                 <p class="text-slate-600 text-sm font-medium">{{ __('Technical Advisers') }}</p>
                                 <p class="text-3xl font-bold text-slate-900 mt-1">
-                                    {{ \App\Models\User::whereHas('roles', fn($q) => $q->where('name', 'technical_adviser'))->count() }}
+                                    {{ $technicalAdvisersCount }}
                                 </p>
                             </div>
                             <div class="p-3 bg-blue-100 rounded-lg">
@@ -68,7 +68,7 @@
                             <div>
                                 <p class="text-slate-600 text-sm font-medium">{{ __('Roles') }}</p>
                                 <p class="text-3xl font-bold text-slate-900 mt-1">
-                                    {{ \App\Models\Role::count() }}
+                                    {{ $rolesCount }}
                                 </p>
                             </div>
                             <div class="p-3 bg-purple-100 rounded-lg">
@@ -93,10 +93,6 @@
                     <a href="{{ route('admin.technical-advisers.create') }}" class="flex items-center px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition">
                         <i class="fas fa-plus mr-2"></i>
                         {{ __('Add Technical Adviser') }}
-                    </a>
-                    <a href="{{ route('admin.roles.create') }}" class="flex items-center px-4 py-2 text-purple-600 hover:bg-purple-50 rounded-lg transition">
-                        <i class="fas fa-plus mr-2"></i>
-                        {{ __('Create Role') }}
                     </a>
                 </div>
             </div>
