@@ -28,6 +28,8 @@
 
                     {{-- Desktop links --}}
                     <div class="hidden sm:flex items-center gap-4">
+                        <a href="{{ route('leaderboard.teams') }}" class="text-sm font-medium text-slate-600 hover:text-slate-900">Teams</a>
+                        <a href="{{ route('leaderboard.contributors') }}" class="text-sm font-medium text-slate-600 hover:text-slate-900">Contributors</a>
                         @auth
                             <a href="{{ route('dashboard') }}" class="text-sm font-medium text-slate-600 hover:text-slate-900">Dashboard</a>
                         @else
@@ -49,6 +51,8 @@
             {{-- Mobile menu --}}
             <div x-show="open" x-cloak x-transition class="fixed inset-x-0 top-16 z-40 bg-white border-t border-slate-200 sm:hidden">
                 <div class="px-4 py-3 space-y-2 max-h-96 overflow-y-auto">
+                    <a href="{{ route('leaderboard.teams') }}" class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">Teams</a>
+                    <a href="{{ route('leaderboard.contributors') }}" class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">Contributors</a>
                     @auth
                         <a href="{{ route('dashboard') }}" class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">Dashboard</a>
                     @else
