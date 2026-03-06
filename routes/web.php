@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\TechnicalAdviserController;
+use App\Http\Controllers\LeaderboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TeamLeader\DashboardController;
@@ -75,5 +76,17 @@ Route::middleware(['auth', 'verified', 'permission:register repository'])->prefi
 
 // Public Project Pages
 Route::get('projects/{slug}', [ProjectController::class, 'show'])->name('projects.show');
+
+// Public Leaderboards
+Route::prefix('leaderboard')->name('leaderboard.')->group(function () {
+    Route::get('teams/{period?}', [LeaderboardController::class, 'teams'])
+        ->where('period', 'week|month|all')
+        ->defaults('period', 'week')
+        ->name('teams');
+    Route::get('contributors/{period?}', [LeaderboardController::class, 'contributors'])
+        ->where('period', 'week|month|all')
+        ->defaults('period', 'week')
+        ->name('contributors');
+});
 
 require __DIR__.'/auth.php';

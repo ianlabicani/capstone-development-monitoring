@@ -1,0 +1,67 @@
+<section x-data="{ confirmingDeletion: <?php echo e($errors->userDeletion->isNotEmpty() ? 'true' : 'false'); ?> }" class="space-y-6">
+    <header>
+        <h2 class="text-lg font-medium text-slate-900">
+            <?php echo e(__('Delete Account')); ?>
+
+        </h2>
+
+        <p class="mt-1 text-sm text-slate-600">
+            <?php echo e(__('Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.')); ?>
+
+        </p>
+    </header>
+
+    <button @click="confirmingDeletion = true" type="button" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">
+        <?php echo e(__('Delete Account')); ?>
+
+    </button>
+
+    
+    <div x-show="confirmingDeletion" x-cloak x-transition class="fixed inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-50" @keydown.escape.window="confirmingDeletion = false">
+        <div class="fixed inset-0 transform transition-all" @click="confirmingDeletion = false">
+            <div class="absolute inset-0 bg-slate-500 opacity-75"></div>
+        </div>
+
+        <div class="mb-6 bg-white rounded-2xl overflow-hidden shadow-xl transform transition-all sm:w-full sm:max-w-2xl sm:mx-auto relative">
+            <form method="post" action="<?php echo e(route('profile.destroy')); ?>" class="p-6">
+                <?php echo csrf_field(); ?>
+                <?php echo method_field('delete'); ?>
+
+                <h2 class="text-lg font-medium text-slate-900">
+                    <?php echo e(__('Are you sure you want to delete your account?')); ?>
+
+                </h2>
+
+                <p class="mt-1 text-sm text-slate-600">
+                    <?php echo e(__('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.')); ?>
+
+                </p>
+
+                <div class="mt-6">
+                    <label for="password" class="sr-only"><?php echo e(__('Password')); ?></label>
+                    <input id="password" name="password" type="password" placeholder="<?php echo e(__('Password')); ?>" class="mt-1 block w-3/4 border-slate-300 focus:border-orange-500 focus:ring-orange-500 rounded-lg shadow-sm" />
+                    <?php if($errors->userDeletion->has('password')): ?>
+                        <ul class="mt-2 text-sm text-red-600 space-y-1">
+                            <?php $__currentLoopData = $errors->userDeletion->get('password'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $message): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <li><?php echo e($message); ?></li>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </ul>
+                    <?php endif; ?>
+                </div>
+
+                <div class="mt-6 flex justify-end">
+                    <button type="button" @click="confirmingDeletion = false" class="inline-flex items-center px-4 py-2 bg-white border border-slate-300 rounded-lg font-semibold text-xs text-slate-700 uppercase tracking-widest shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-orange-300 focus:ring-offset-2 transition ease-in-out duration-150">
+                        <?php echo e(__('Cancel')); ?>
+
+                    </button>
+
+                    <button type="submit" class="ms-3 inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                        <?php echo e(__('Delete Account')); ?>
+
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<?php /**PATH C:\Users\Ian\Desktop\PROJECTS\SCHOOL\TECH\capstone-development-monitoring\resources\views/profile/partials/delete-user-form.blade.php ENDPATH**/ ?>
