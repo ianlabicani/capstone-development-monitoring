@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\TechnicalAdviserController as AdminTechnicalAdvis
 use App\Http\Controllers\CapstoneTeacher\DashboardController as CapstoneTeacherDashboardController;
 use App\Http\Controllers\CapstoneTeacher\TeamController as CapstoneTeacherTeamController;
 use App\Http\Controllers\CapstoneTeacher\TechnicalAdviserController as CapstoneTeacherTechnicalAdviserController;
+use App\Http\Controllers\DashboardRedirectController;
 use App\Http\Controllers\LeaderboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
@@ -18,9 +19,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', DashboardRedirectController::class)->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
