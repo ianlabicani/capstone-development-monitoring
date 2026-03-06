@@ -1,0 +1,175 @@
+{
+  "product_name": "Capstone Development Monitoring System",
+  "overview": {
+    "description": "A web-based system that integrates with GitHub repositories of capstone teams to monitor development activity such as commits, branches, pull requests, and contributor participation. The system aggregates repository data into dashboards for advisers, instructors, and optionally the public to encourage accountability, transparency, and consistent progress among capstone teams.",
+    "primary_goal": "Improve visibility of student development progress and encourage consistent coding activity through monitored GitHub metrics and public recognition.",
+    "secondary_goals": [
+      "Encourage proper use of Git workflows",
+      "Allow advisers to identify inactive or struggling teams early",
+      "Provide automated progress indicators instead of relying purely on reports",
+      "Encourage competition and motivation through public visibility"
+    ]
+  },
+  "system_roles": [
+    {
+      "role": "Admin",
+      "description": "Manages the entire system including courses, teachers, and GitHub integration settings."
+    },
+    {
+      "role": "Capstone Teacher",
+      "description": "Monitors multiple capstone teams, views progress dashboards, and checks development activity."
+    },
+    {
+      "role": "Technical Adviser",
+      "description": "Tracks assigned teams more deeply including commits, branches, pull requests, and contributor activity."
+    },
+    {
+      "role": "Capstone Team",
+      "description": "Registers their GitHub repository and links their members to the system."
+    },
+    {
+      "role": "Public Viewer",
+      "description": "Can view public dashboards showing team progress, commit streaks, and project summaries to encourage engagement and competition."
+    }
+  ],
+  "core_features": [
+    "GitHub repository integration",
+    "Automated commit tracking",
+    "Branch and pull request monitoring",
+    "Contributor activity tracking",
+    "Team progress dashboard",
+    "Public leaderboard for project activity",
+    "Adviser monitoring dashboard",
+    "Commit timeline visualization"
+  ],
+  "technical_feasibility": {
+    "feasibility_level": "High",
+    "reasoning": [
+      "GitHub provides a robust REST API and webhooks for repository activity.",
+      "Laravel can easily consume APIs and store activity data.",
+      "Background jobs can periodically sync repository activity.",
+      "Dashboards can be generated from stored metrics."
+    ],
+    "main_dependencies": [
+      "GitHub API",
+      "Laravel backend",
+      "Database for activity tracking",
+      "Queue workers for scheduled synchronization"
+    ]
+  },
+  "integration_flow": {
+    "step_1": "Capstone team registers in the system.",
+    "step_2": "Team connects their GitHub repository via GitHub OAuth.",
+    "step_3": "The system stores repository metadata such as repo name, organization, contributors, and default branch.",
+    "step_4": "A background job periodically calls the GitHub API to fetch commits, branches, pull requests, and contributors.",
+    "step_5": "Activity data is stored in the system database.",
+    "step_6": "Dashboards are generated for advisers and instructors.",
+    "step_7": "Selected metrics are displayed in the public dashboard."
+  },
+  "github_api_usage": {
+    "purpose": "Retrieve development activity data",
+    "main_endpoints": [
+      "List repository commits",
+      "List branches",
+      "List pull requests",
+      "List contributors",
+      "Repository metadata"
+    ],
+    "alternative": "GitHub webhooks can push events to the Laravel system whenever commits or pull requests occur, reducing the need for frequent polling."
+  },
+  "data_model_overview": {
+    "entities": [
+      "users",
+      "teams",
+      "repositories",
+      "contributors",
+      "commits",
+      "branches",
+      "pull_requests",
+      "activity_logs"
+    ]
+  },
+  "user_stories": [
+    {
+      "role": "Capstone Team",
+      "story": "As a capstone team member, I want to register my GitHub repository so our development activity is tracked automatically."
+    },
+    {
+      "role": "Capstone Team",
+      "story": "As a capstone team member, I want our commits and contributions to be visible so advisers can see our progress."
+    },
+    {
+      "role": "Technical Adviser",
+      "story": "As a technical adviser, I want to monitor commit activity so I can detect teams that are not actively developing."
+    },
+    {
+      "role": "Capstone Teacher",
+      "story": "As a teacher, I want to see dashboards of all teams so I can quickly evaluate progress."
+    },
+    {
+      "role": "Public Viewer",
+      "story": "As a visitor, I want to see active projects and development progress so I can learn from or be inspired by the teams."
+    }
+  ],
+  "ui_structure": {
+    "pages": [
+      {
+        "page": "Team Repository Registration",
+        "description": "Teams submit their GitHub repository URL or connect via GitHub OAuth."
+      },
+      {
+        "page": "Team Dashboard",
+        "description": "Shows commit history, contributors, commit streaks, branch list, and pull requests."
+      },
+      {
+        "page": "Adviser Dashboard",
+        "description": "Displays multiple teams with activity summaries including commits per week, active contributors, and development frequency."
+      },
+      {
+        "page": "Teacher Monitoring Dashboard",
+        "description": "Overview of all capstone teams with metrics such as total commits, last commit date, and repository health."
+      },
+      {
+        "page": "Public Activity Board",
+        "description": "Public leaderboard showing active teams, recent commits, top contributors, and project descriptions."
+      },
+      {
+        "page": "Project Profile Page",
+        "description": "Public page displaying project description, commit timeline, contributors, and repository link."
+      }
+    ]
+  },
+  "public_encouragement_features": [
+    "Top active teams leaderboard",
+    "Commit streak tracking",
+    "Most active contributor recognition",
+    "Project showcase pages",
+    "Recent activity feed",
+    "Public development timeline"
+  ],
+  "metrics_to_track": [
+    "Total commits",
+    "Commits per week",
+    "Last commit date",
+    "Number of contributors",
+    "Pull requests opened",
+    "Pull requests merged",
+    "Branches created",
+    "Commit streaks"
+  ],
+  "architecture": {
+    "frontend": "Laravel Blade or Vue dashboard",
+    "backend": "Laravel API server",
+    "database": "MySQL or PostgreSQL",
+    "external_service": "GitHub API",
+    "background_processing": "Laravel queues and scheduled jobs",
+    "optional_realtime": "GitHub webhooks"
+  },
+  "future_extensions": [
+    "Automatic grading metrics based on activity",
+    "AI-based analysis of commit quality",
+    "Integration with GitHub issues and project boards",
+    "Automated alerts when teams become inactive",
+    "Weekly progress reports sent to advisers"
+  ]
+}
