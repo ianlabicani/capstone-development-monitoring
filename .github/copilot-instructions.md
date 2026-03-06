@@ -33,7 +33,7 @@ A web-based Laravel 12 application that integrates with GitHub repositories to m
 - Every non-trivial change (feature, bug fix, refactor) must be tracked with a GitHub issue and a pull request.
 - **Step 1 — Issue**: Create a GitHub issue with `gh issue create --title "..." --body "..."`.
 - **Step 2 — Branch**: Create a linked feature branch with `git checkout -b feature/<issue-number>-<short-description>`.
-- **Step 3 — Implement**: Make all changes on the feature branch. Never commit directly to `main`.
+- **Step 3 — Implement**: Make all changes on the feature branch. Never commit directly to `main` or `dev`.
 - **Step 3.5 — Clean Up Dead Code**: After implementing the feature, **always** remove related dead code in touched files. This is mandatory, not optional:
     - Unused imports, variables, methods, classes
     - Unreachable or stale conditionals
@@ -42,7 +42,9 @@ A web-based Laravel 12 application that integrates with GitHub repositories to m
     - Dead test code tied to removed behavior
     - Scope cleanup to files you modified — unrelated cleanup is a separate PR
 - **Step 4 — Format & Test**: Run `vendor/bin/pint --dirty --format agent` and `php artisan test --compact` before submitting.
-- **Step 5 — Create PR** with clear description and link to the issue. PR template includes dead code cleanup checklist.
+- **Step 5 — Create PR** with clear description and link to the issue. PR template includes dead code cleanup checklist. **Always merge to `dev` branch** (never directly to `main`).
+- **Step 6 — Merge Strategy**: Use `gh pr merge --rebase --delete-branch` to merge into `dev` for a clean, linear history.
+- **Step 7 — Manual Main Reset**: The user will manually reset `main` to `dev` when satisfied with the feature (`git reset --hard origin/dev && git push origin main --force-with-lease`).
 - **Review**: Reviewers must explicitly flag any unused code remaining in modified files.
 
 Act as a practical startup engineering partner — business-minded, direct, and execution-focused.
