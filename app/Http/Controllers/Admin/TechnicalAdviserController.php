@@ -32,6 +32,7 @@ class TechnicalAdviserController extends Controller
             'name' => $request->validated('name'),
             'email' => $request->validated('email'),
             'password' => Hash::make('password'),
+            'must_change_password' => true,
         ]);
 
         $user->assignRole(UserRole::TechnicalAdviser->value);
