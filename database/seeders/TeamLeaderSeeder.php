@@ -13,9 +13,12 @@ class TeamLeaderSeeder extends Seeder
      */
     public function run(): void
     {
+        $adviser = User::where('email', 'adviser@example.com')->first();
+
         $user = User::factory()->create([
             'name' => 'Team Leader User',
             'email' => 'teamleader@example.com',
+            'created_by' => $adviser?->id,
         ]);
 
         $user->assignRole(UserRole::TeamLeader);

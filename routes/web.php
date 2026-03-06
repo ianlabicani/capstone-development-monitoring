@@ -6,6 +6,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TeamLeader\DashboardController;
 use App\Http\Controllers\TeamLeader\RepositoryController;
 use App\Http\Controllers\TeamLeader\TeamController;
+use App\Http\Controllers\TechnicalAdviser\MonitoringController;
 use App\Http\Controllers\TechnicalAdviser\TeamLeaderController;
 use Illuminate\Support\Facades\Route;
 
@@ -45,6 +46,10 @@ Route::middleware(['auth', 'verified'])->prefix('technical-adviser')->name('tech
     Route::get('team-leaders/{user}/edit', [TeamLeaderController::class, 'edit'])->middleware('can:manage team leaders')->name('team-leaders.edit');
     Route::patch('team-leaders/{user}', [TeamLeaderController::class, 'update'])->middleware('can:manage team leaders')->name('team-leaders.update');
     Route::delete('team-leaders/{user}', [TeamLeaderController::class, 'destroy'])->middleware('can:manage team leaders')->name('team-leaders.destroy');
+
+    // Monitoring
+    Route::get('monitoring', [MonitoringController::class, 'index'])->middleware('can:view team progress')->name('monitoring.index');
+    Route::get('monitoring/{team}', [MonitoringController::class, 'show'])->middleware('can:view team progress')->name('monitoring.show');
 });
 
 // Team Leader Routes
