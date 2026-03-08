@@ -301,204 +301,184 @@
                                 @endif
                             </div>
                         </div>
-                        @php
-                            $versions = $team->userStories->pluck('version')->unique()->sort()->reverse()->values();
-                        @endphp
-                        <div x-data="{ selectedVersion: null, selectedStatus: 'all', sortOrder: 'asc' }">
-                            @if ($versions->count() > 1)
-                                <div class="border-t border-slate-200 p-6">
+
+                        {{-- Filters and Sort --}}
+                        <div class="border-t border-slate-200 p-6 space-y-4">
+                            {{-- Version Filter --}}
+                            @if ($allVersions->count() > 1)
+                                <div>
                                     <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Filter by version</p>
                                     <div class="flex flex-wrap gap-2">
-                                        <button
-                                            @click="selectedVersion = null"
-                                            :class="{ 'bg-orange-600 text-white ring-orange-600': selectedVersion === null, 'bg-slate-100 text-slate-700 ring-slate-200': selectedVersion !== null }"
-                                            class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition"
-                                        >
-                                            All Versions
-                                        </button>
-                                        @foreach ($versions as $version)
-                                            <button
-                                                @click="selectedVersion = '{{ $version }}'"
-                                                :class="{ 'bg-orange-600 text-white ring-orange-600': selectedVersion === '{{ $version }}', 'bg-slate-100 text-slate-700 ring-slate-200': selectedVersion !== '{{ $version }}' }"
-                                                class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition"
+                                        @foreach ($allVersions as $version)
+                                            <a
+                                                href="{{ route('team-leader.analysis.show', ['version' => $version, 'status' => $selectedStatus, 'sort' => $sortOrder]) }}"
+                                                class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition {{ $selectedVersion === $version ? 'bg-orange-600 text-white ring-orange-600' : 'bg-slate-100 text-slate-700 ring-slate-200' }}"
                                             >
                                                 {{ $version }}
-                                            </button>
+                                            </a>
                                         @endforeach
                                     </div>
                                 </div>
                             @endif
-                            
-                            {{-- Status and Sort Filters --}}
-                            <div class="border-t border-slate-200 p-6">
-                                <div class="space-y-4">
-                                    <div>
-                                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Filter by status</p>
-                                        <div class="flex flex-wrap gap-2">
-                                            <button
-                                                @click="selectedStatus = 'all'"
-                                                :class="{ 'bg-orange-600 text-white ring-orange-600': selectedStatus === 'all', 'bg-slate-100 text-slate-700 ring-slate-200': selectedStatus !== 'all' }"
-                                                class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition"
-                                            >
-                                                All
-                                            </button>
-                                            <button
-                                                @click="selectedStatus = 'approved'"
-                                                :class="{ 'bg-orange-600 text-white ring-orange-600': selectedStatus === 'approved', 'bg-slate-100 text-slate-700 ring-slate-200': selectedStatus !== 'approved' }"
-                                                class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition"
-                                            >
-                                                <i class="fas fa-check mr-1.5"></i> Approved
-                                            </button>
-                                            <button
-                                                @click="selectedStatus = 'draft'"
-                                                :class="{ 'bg-orange-600 text-white ring-orange-600': selectedStatus === 'draft', 'bg-slate-100 text-slate-700 ring-slate-200': selectedStatus !== 'draft' }"
-                                                class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition"
-                                            >
-                                                <i class="fas fa-pencil mr-1.5"></i> Draft
-                                            </button>
-                                            <button
-                                                @click="selectedStatus = 'gap'"
-                                                :class="{ 'bg-orange-600 text-white ring-orange-600': selectedStatus === 'gap', 'bg-slate-100 text-slate-700 ring-slate-200': selectedStatus !== 'gap' }"
-                                                class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition"
-                                            >
-                                                <i class="fas fa-exclamation mr-1.5"></i> Gaps
-                                            </button>
-                                        </div>
-                                    </div>
-                                    
-                                    <div>
-                                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Sort by title</p>
-                                        <div class="flex gap-2">
-                                            <button
-                                                @click="sortOrder = 'asc'"
-                                                :class="{ 'bg-orange-600 text-white ring-orange-600': sortOrder === 'asc', 'bg-slate-100 text-slate-700 ring-slate-200': sortOrder !== 'asc' }"
-                                                class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition"
-                                            >
-                                                <i class="fas fa-arrow-up mr-1.5"></i> A-Z
-                                            </button>
-                                            <button
-                                                @click="sortOrder = 'desc'"
-                                                :class="{ 'bg-orange-600 text-white ring-orange-600': sortOrder === 'desc', 'bg-slate-100 text-slate-700 ring-slate-200': sortOrder !== 'desc' }"
-                                                class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition"
-                                            >
-                                                <i class="fas fa-arrow-down mr-1.5"></i> Z-A
-                                            </button>
-                                        </div>
-                                    </div>
+
+                            {{-- Status Filter --}}
+                            <div>
+                                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Filter by status</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <a
+                                        href="{{ route('team-leader.analysis.show', ['version' => $selectedVersion, 'status' => 'gap', 'sort' => $sortOrder]) }}"
+                                        class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition {{ $selectedStatus === 'gap' ? 'bg-orange-600 text-white ring-orange-600' : 'bg-slate-100 text-slate-700 ring-slate-200' }}"
+                                    >
+                                        <i class="fas fa-exclamation mr-1.5"></i> Gaps
+                                    </a>
+                                    <a
+                                        href="{{ route('team-leader.analysis.show', ['version' => $selectedVersion, 'status' => 'approved', 'sort' => $sortOrder]) }}"
+                                        class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition {{ $selectedStatus === 'approved' ? 'bg-orange-600 text-white ring-orange-600' : 'bg-slate-100 text-slate-700 ring-slate-200' }}"
+                                    >
+                                        <i class="fas fa-check mr-1.5"></i> Approved
+                                    </a>
+                                    <a
+                                        href="{{ route('team-leader.analysis.show', ['version' => $selectedVersion, 'status' => 'draft', 'sort' => $sortOrder]) }}"
+                                        class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition {{ $selectedStatus === 'draft' ? 'bg-orange-600 text-white ring-orange-600' : 'bg-slate-100 text-slate-700 ring-slate-200' }}"
+                                    >
+                                        <i class="fas fa-pencil mr-1.5"></i> Draft
+                                    </a>
                                 </div>
                             </div>
-                            <div class="divide-y divide-slate-200" x-data="{ getFilteredStories() { return [] } }" x-init="stories = @json($team->userStories->toArray())">
-                                @foreach ($team->userStories->sortByDesc('version')->groupBy('version') as $version => $stories)
-                                    <div x-show="selectedVersion === null || selectedVersion === {{ $version }}">
-                                        <div class="bg-slate-50 px-6 py-3 border-b border-slate-200">
-                                            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Version {{ $version }}</span>
-                                            <span class="ml-2 text-xs text-slate-400">({{ $stories->count() }} {{ Str::plural('story', $stories->count()) }})</span>
-                                        </div>
-                                    @foreach ($stories->sortBy('sort_order') as $story)
-                                <div class="p-6" x-data="{ editing: false }" x-show="(selectedVersion === null || selectedVersion === '{{ $story->version }}') && (selectedStatus === 'all' || (selectedStatus === 'approved' && {{ $story->status === \App\Enums\UserStoryStatus::Approved ? 'true' : 'false' }}) || (selectedStatus === 'draft' && {{ $story->status === \App\Enums\UserStoryStatus::Draft ? 'true' : 'false' }}) || (selectedStatus === 'gap' && {{ $story->status === \App\Enums\UserStoryStatus::Approved && !$story->is_covered ? 'true' : 'false' }}))" @change.window="$watch('sortOrder', () => sortOrder)">
-                                    <div class="flex items-start justify-between gap-4">
-                                        <div class="flex-1">
-                                            <div class="flex items-center gap-2 mb-1">
-                                                {{-- Status badge --}}
-                                                @if ($story->status === \App\Enums\UserStoryStatus::Approved)
-                                                    @if ($story->is_covered)
-                                                        <span class="inline-flex items-center rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800">
-                                                            <i class="fas fa-check mr-1"></i> Covered{{ $story->manually_achieved_at ? ' (Manual)' : '' }}
-                                                        </span>
-                                                    @else
-                                                        <span class="inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800">
-                                                            <i class="fas fa-exclamation mr-1"></i> Gap
+
+                            {{-- Sort --}}
+                            <div>
+                                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Sort by title</p>
+                                <div class="flex gap-2">
+                                    <a
+                                        href="{{ route('team-leader.analysis.show', ['version' => $selectedVersion, 'status' => $selectedStatus, 'sort' => 'asc']) }}"
+                                        class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition {{ $sortOrder === 'asc' ? 'bg-orange-600 text-white ring-orange-600' : 'bg-slate-100 text-slate-700 ring-slate-200' }}"
+                                    >
+                                        <i class="fas fa-arrow-up mr-1.5"></i> A-Z
+                                    </a>
+                                    <a
+                                        href="{{ route('team-leader.analysis.show', ['version' => $selectedVersion, 'status' => $selectedStatus, 'sort' => 'desc']) }}"
+                                        class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition {{ $sortOrder === 'desc' ? 'bg-orange-600 text-white ring-orange-600' : 'bg-slate-100 text-slate-700 ring-slate-200' }}"
+                                    >
+                                        <i class="fas fa-arrow-down mr-1.5"></i> Z-A
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- User Stories List --}}
+                        @if ($stories->count() > 0)
+                            <div class="divide-y divide-slate-200">
+                                @foreach ($stories as $story)
+                                    <div class="p-6" x-data="{ editing: false }">
+                                        <div class="flex items-start justify-between gap-4">
+                                            <div class="flex-1">
+                                                <div class="flex items-center gap-2 mb-1">
+                                                    {{-- Status badges --}}
+                                                    @if ($story->status === \App\Enums\UserStoryStatus::Approved)
+                                                        @if ($story->is_covered)
+                                                            <span class="inline-flex items-center rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800">
+                                                                <i class="fas fa-check mr-1"></i> Covered
+                                                            </span>
+                                                        @else
+                                                            <span class="inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800">
+                                                                <i class="fas fa-exclamation mr-1"></i> Gap
+                                                            </span>
+                                                        @endif
+                                                    @endif
+                                                    <span class="inline-flex items-center rounded-full bg-{{ $story->status->color() }}-100 px-2 py-0.5 text-xs font-medium text-{{ $story->status->color() }}-800">
+                                                        {{ $story->status->label() }}
+                                                    </span>
+                                                    @if ($story->manually_created)
+                                                        <span class="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800">
+                                                            <i class="fas fa-hand mr-1"></i> Manual
                                                         </span>
                                                     @endif
-                                                @endif
-                                                <span class="inline-flex items-center rounded-full bg-{{ $story->status->color() }}-100 px-2 py-0.5 text-xs font-medium text-{{ $story->status->color() }}-800">
-                                                    {{ $story->status->label() }}
-                                                </span>
-                                                @if ($story->manually_created)
-                                                    <span class="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800">
-                                                        <i class="fas fa-hand mr-1"></i> Manual
-                                                    </span>
-                                                @endif
-                                                <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500">
-                                                    v{{ $story->version }}
-                                                </span>
+                                                </div>
+
+                                                {{-- Display mode --}}
+                                                <div x-show="!editing">
+                                                    <p class="text-sm font-semibold text-slate-900">{{ $story->title }}</p>
+                                                    @if ($story->description)
+                                                        <p class="mt-1 text-sm text-slate-600">{{ $story->description }}</p>
+                                                    @endif
+                                                    @if ($story->keywords)
+                                                        <div class="mt-2 flex flex-wrap gap-1">
+                                                            @foreach ($story->keywords as $keyword)
+                                                                <span class="inline-block rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-600">{{ $keyword }}</span>
+                                                            @endforeach
+                                                        </div>
+                                                    @endif
+                                                </div>
+
+                                                {{-- Edit mode --}}
+                                                <div x-show="editing" x-cloak>
+                                                    <form action="{{ route('team-leader.analysis.update-story', $story) }}" method="POST" class="space-y-3">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <input type="text" name="title" value="{{ $story->title }}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
+                                                        <textarea name="description" rows="2" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-orange-500 focus:ring-1 focus:ring-orange-500">{{ $story->description }}</textarea>
+                                                        <div class="flex gap-2">
+                                                            <button type="submit" class="inline-flex items-center rounded-lg bg-orange-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-orange-700">Save</button>
+                                                            <button type="button" @click="editing = false" class="inline-flex items-center rounded-lg border border-slate-300 px-4 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50">Cancel</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
                                             </div>
 
-                                            {{-- Display mode --}}
-                                            <div x-show="!editing">
-                                                <p class="text-sm font-semibold text-slate-900">{{ $story->title }}</p>
-                                                @if ($story->description)
-                                                    <p class="mt-1 text-sm text-slate-600">{{ $story->description }}</p>
-                                                @endif
-                                                @if ($story->keywords)
-                                                    <div class="mt-2 flex flex-wrap gap-1">
-                                                        @foreach ($story->keywords as $keyword)
-                                                            <span class="inline-block rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-600">{{ $keyword }}</span>
-                                                        @endforeach
-                                                    </div>
-                                                @endif
-                                            </div>
-
-                                            {{-- Edit mode --}}
-                                            <div x-show="editing" x-cloak>
-                                                <form action="{{ route('team-leader.analysis.update-story', $story) }}" method="POST" class="space-y-3">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <input type="text" name="title" value="{{ $story->title }}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
-                                                    <textarea name="description" rows="2" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-orange-500 focus:ring-1 focus:ring-orange-500">{{ $story->description }}</textarea>
-                                                    <div class="flex gap-2">
-                                                        <button type="submit" class="inline-flex items-center rounded-lg bg-orange-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-orange-700">Save</button>
-                                                        <button type="button" @click="editing = false" class="inline-flex items-center rounded-lg border border-slate-300 px-4 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50">Cancel</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-
-                                        {{-- Actions --}}
-                                        <div class="flex items-center gap-1" x-show="!editing">
-                                            <button @click="editing = true" class="inline-flex items-center rounded-lg border border-slate-300 px-2 py-1.5 text-xs text-slate-600 hover:bg-slate-50" title="Edit">
-                                                <i class="fas fa-pen"></i>
-                                            </button>
-                                            <form action="{{ route('team-leader.analysis.approve-story', $story) }}" method="POST">
-                                                @csrf
-                                                <button type="submit" class="inline-flex items-center rounded-lg border px-2 py-1.5 text-xs hover:bg-slate-50 {{ $story->status === \App\Enums\UserStoryStatus::Approved ? 'border-emerald-300 text-emerald-600' : 'border-slate-300 text-slate-600' }}" title="{{ $story->status === \App\Enums\UserStoryStatus::Approved ? 'Unapprove' : 'Approve' }}">
-                                                    <i class="fas fa-{{ $story->status === \App\Enums\UserStoryStatus::Approved ? 'check-circle' : 'circle' }}"></i>
+                                            {{-- Actions --}}
+                                            <div class="flex items-center gap-1" x-show="!editing">
+                                                <button @click="editing = true" class="inline-flex items-center rounded-lg border border-slate-300 px-2 py-1.5 text-xs text-slate-600 hover:bg-slate-50" title="Edit">
+                                                    <i class="fas fa-pen"></i>
                                                 </button>
-                                            </form>
-                                            @if ($story->status === \App\Enums\UserStoryStatus::Approved)
-                                                <form action="{{ route('team-leader.analysis.toggle-achievement', $story) }}" method="POST" x-data="{ loading: false }" @submit="loading = true">
+                                                <form action="{{ route('team-leader.analysis.approve-story', $story) }}" method="POST">
                                                     @csrf
-                                                    @method('PATCH')
-                                                    <button type="submit" class="inline-flex items-center rounded-lg border px-2 py-1.5 text-xs hover:bg-slate-50 {{ $story->is_covered ? 'border-amber-300 text-amber-600' : 'border-slate-300 text-slate-600' }}" title="{{ $story->is_covered ? 'Mark as not achieved' : 'Mark as achieved' }}" :disabled="loading">
+                                                    <button type="submit" class="inline-flex items-center rounded-lg border px-2 py-1.5 text-xs hover:bg-slate-50 {{ $story->status === \App\Enums\UserStoryStatus::Approved ? 'border-emerald-300 text-emerald-600' : 'border-slate-300 text-slate-600' }}" title="{{ $story->status === \App\Enums\UserStoryStatus::Approved ? 'Unapprove' : 'Approve' }}">
+                                                        <i class="fas fa-{{ $story->status === \App\Enums\UserStoryStatus::Approved ? 'check-circle' : 'circle' }}"></i>
+                                                    </button>
+                                                </form>
+                                                @if ($story->status === \App\Enums\UserStoryStatus::Approved)
+                                                    <form action="{{ route('team-leader.analysis.toggle-achievement', $story) }}" method="POST" x-data="{ loading: false }" @submit="loading = true">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="submit" class="inline-flex items-center rounded-lg border px-2 py-1.5 text-xs hover:bg-slate-50 {{ $story->is_covered ? 'border-amber-300 text-amber-600' : 'border-slate-300 text-slate-600' }}" :disabled="loading">
+                                                            <template x-if="loading">
+                                                                <i class='fas fa-spinner fa-spin'></i>
+                                                            </template>
+                                                            <template x-if="!loading">
+                                                                <i class="fas fa-{{ $story->is_covered ? '' : 'regular ' }}star"></i>
+                                                            </template>
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                                <form action="{{ route('team-leader.analysis.delete-story', $story) }}" method="POST" onsubmit="return confirm('Delete this story?')" x-data="{ loading: false }" @submit="loading = true">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="inline-flex items-center rounded-lg border border-red-300 px-2 py-1.5 text-xs text-red-600 hover:bg-red-50" title="Delete" :disabled="loading">
                                                         <template x-if="loading">
                                                             <i class='fas fa-spinner fa-spin'></i>
                                                         </template>
                                                         <template x-if="!loading">
-                                                            <i class="fas fa-{{ $story->is_covered ? 'star' : 'star' }} fa-{{ $story->is_covered ? '' : 'regular' }}"></i>
+                                                            <i class="fas fa-trash"></i>
                                                         </template>
                                                     </button>
                                                 </form>
-                                            @endif
-                                            <form action="{{ route('team-leader.analysis.delete-story', $story) }}" method="POST" onsubmit="return confirm('Delete this story?')" x-data="{ loading: false }" @submit="loading = true">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="inline-flex items-center rounded-lg border border-red-300 px-2 py-1.5 text-xs text-red-600 hover:bg-red-50" title="Delete" :disabled="loading">
-                                                    <template x-if="loading">
-                                                        <i class='fas fa-spinner fa-spin'></i>
-                                                    </template>
-                                                    <template x-if="!loading">
-                                                        <i class="fas fa-trash"></i>
-                                                    </template>
-                                                </button>
-                                            </form>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            @endforeach
-                                </div>
-                            @endforeach
+                                @endforeach
                             </div>
-                        </div>
+
+                            {{-- Pagination --}}
+                            <div class="border-t border-slate-200 p-6">
+                                {{ $stories->links() }}
+                            </div>
+                        @else
+                            <div class="p-6 text-center">
+                                <i class="fas fa-filter text-3xl text-slate-300 mb-3 block"></i>
+                                <p class="text-slate-600">No stories match your filters.</p>
+                            </div>
+                        @endif
                     </div>
 
                     {{-- Add Manual Story --}}

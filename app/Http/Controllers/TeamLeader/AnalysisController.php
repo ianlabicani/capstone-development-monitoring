@@ -20,7 +20,7 @@ use Illuminate\View\View;
 
 class AnalysisController extends Controller
 {
-    public function show(): View|RedirectResponse
+    public function show(Request $request): View|RedirectResponse
     {
         $team = Auth::user()->team;
 
@@ -28,13 +28,45 @@ class AnalysisController extends Controller
             return redirect()->route('team-leader.team.create');
         }
 
-        $team->load(['documents', 'userStories', 'repositories']);
+        $team->load(['documents', 'repositories']);
 
-        $approvedStories = $team->userStories->where('status', UserStoryStatus::Approved);
+        $approvedStories = $team->userStories()->where('status', UserStoryStatus::Approved);
         $totalApproved = $approvedStories->count();
         $coveredCount = $approvedStories->where('is_covered', true)->count();
         $gapCount = $totalApproved - $coveredCount;
         $progressPercent = $totalApproved > 0 ? round(($coveredCount / $totalApproved) * 100) : null;
+
+        // Get all available versions
+        $allVersions = $team->userStories()->distinct()->pluck('version')->sort()->reverse()->values();
+        $latestVersion = $allVersions->first();
+
+        // Get filter parameters from URL with defaults
+        $selectedVersion = $request->query('version', $latestVersion);
+        $selectedStatus = $request->query('status', 'gap');
+        $sortOrder = $request->query('sort', 'asc');
+
+        // Build the query
+        $query = $team->userStories()->where('version', $selectedVersion);
+
+        // Apply status filter
+        if ($selectedStatus === 'approved') {
+            $query = $query->where('status', UserStoryStatus::Approved);
+        } elseif ($selectedStatus === 'draft') {
+            $query = $query->where('status', UserStoryStatus::Draft);
+        } elseif ($selectedStatus === 'gap') {
+            // Gaps = Approved but not covered
+            $query = $query->where('status', UserStoryStatus::Approved)->where('is_covered', false);
+        }
+
+        // Apply sort
+        if ($sortOrder === 'asc') {
+            $query = $query->orderBy('title', 'asc');
+        } else {
+            $query = $query->orderBy('title', 'desc');
+        }
+
+        // Paginate results (15 per page)
+        $stories = $query->paginate(15);
 
         return view('team-leader.analysis.show', compact(
             'team',
@@ -42,6 +74,11 @@ class AnalysisController extends Controller
             'coveredCount',
             'gapCount',
             'progressPercent',
+            'stories',
+            'allVersions',
+            'selectedVersion',
+            'selectedStatus',
+            'sortOrder',
         ));
     }
 
