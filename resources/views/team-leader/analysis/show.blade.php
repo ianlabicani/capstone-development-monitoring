@@ -404,13 +404,18 @@
 
                                                 {{-- Edit mode --}}
                                                 <div x-show="editing" x-cloak>
-                                                    <form action="{{ route('team-leader.analysis.update-story', $story) }}" method="POST" class="space-y-3">
+                                                    <form action="{{ route('team-leader.analysis.update-story', $story) }}" method="POST" class="space-y-3" x-data="{ loading: false }" @submit="loading = true">
                                                         @csrf
                                                         @method('PATCH')
                                                         <input type="text" name="title" value="{{ $story->title }}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
                                                         <textarea name="description" rows="2" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-orange-500 focus:ring-1 focus:ring-orange-500">{{ $story->description }}</textarea>
                                                         <div class="flex gap-2">
-                                                            <button type="submit" class="inline-flex items-center rounded-lg bg-orange-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-orange-700">Save</button>
+                                                            <button type="submit" class="inline-flex items-center rounded-lg bg-orange-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-orange-700" :disabled="loading">
+                                                                <template x-if="loading">
+                                                                    <i class='fas fa-spinner fa-spin mr-1'></i>
+                                                                </template>
+                                                                <span x-text="loading ? 'Saving...' : 'Save'"></span>
+                                                            </button>
                                                             <button type="button" @click="editing = false" class="inline-flex items-center rounded-lg border border-slate-300 px-4 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50">Cancel</button>
                                                         </div>
                                                     </form>
@@ -422,10 +427,15 @@
                                                 <button @click="editing = true" class="inline-flex items-center rounded-lg border border-slate-300 px-2 py-1.5 text-xs text-slate-600 hover:bg-slate-50" title="Edit">
                                                     <i class="fas fa-pen"></i>
                                                 </button>
-                                                <form action="{{ route('team-leader.analysis.approve-story', $story) }}" method="POST">
+                                                <form action="{{ route('team-leader.analysis.approve-story', $story) }}" method="POST" x-data="{ loading: false }" @submit="loading = true">
                                                     @csrf
-                                                    <button type="submit" class="inline-flex items-center rounded-lg border px-2 py-1.5 text-xs hover:bg-slate-50 {{ $story->status === \App\Enums\UserStoryStatus::Approved ? 'border-emerald-300 text-emerald-600' : 'border-slate-300 text-slate-600' }}" title="{{ $story->status === \App\Enums\UserStoryStatus::Approved ? 'Unapprove' : 'Approve' }}">
-                                                        <i class="fas fa-{{ $story->status === \App\Enums\UserStoryStatus::Approved ? 'check-circle' : 'circle' }}"></i>
+                                                    <button type="submit" class="inline-flex items-center rounded-lg border px-2 py-1.5 text-xs hover:bg-slate-50 {{ $story->status === \App\Enums\UserStoryStatus::Approved ? 'border-emerald-300 text-emerald-600' : 'border-slate-300 text-slate-600' }}" title="{{ $story->status === \App\Enums\UserStoryStatus::Approved ? 'Unapprove' : 'Approve' }}" :disabled="loading">
+                                                        <template x-if="loading">
+                                                            <i class='fas fa-spinner fa-spin'></i>
+                                                        </template>
+                                                        <template x-if="!loading">
+                                                            <i class="fas fa-{{ $story->status === \App\Enums\UserStoryStatus::Approved ? 'check-circle' : 'circle' }}"></i>
+                                                        </template>
                                                     </button>
                                                 </form>
                                                 @if ($story->status === \App\Enums\UserStoryStatus::Approved)
@@ -437,7 +447,7 @@
                                                                 <i class='fas fa-spinner fa-spin'></i>
                                                             </template>
                                                             <template x-if="!loading">
-                                                                <i class="fas fa-{{ $story->is_covered ? '' : 'regular ' }}star"></i>
+                                                                <i class="{{ $story->is_covered ? 'fas' : 'far' }} fa-star"></i>
                                                             </template>
                                                         </button>
                                                     </form>
