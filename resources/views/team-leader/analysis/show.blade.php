@@ -171,7 +171,7 @@
                                 <p class="text-xs text-slate-400">Max 50,000 characters</p>
                                 <div class="flex items-center gap-2">
                                     @if ($textDoc)
-                                        <form action="{{ route('team-leader.analysis.delete-text') }}" method="POST" class="inline" x-data="{ loading: false }" @submit="if (!confirm('Clear the project description?')) { $event.preventDefault(); return false; } loading = true">
+                                        <form action="{{ route('team-leader.analysis.delete-text') }}" method="POST" class="inline" x-data="{ loading: false }" @submit.prevent="if (confirm('Clear the project description?')) { loading = true; $el.submit(); }">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="inline-flex items-center rounded-lg border border-red-300 px-4 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50" :disabled="loading">
