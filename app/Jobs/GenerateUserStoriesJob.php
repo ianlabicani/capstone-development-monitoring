@@ -15,6 +15,11 @@ class GenerateUserStoriesJob implements ShouldQueue
 {
     use Queueable;
 
+    public int $tries = 2;
+
+    /** @var array<int, int> */
+    public array $backoff = [30, 60];
+
     public function __construct(
         public Team $team,
         public string $source = 'files',
