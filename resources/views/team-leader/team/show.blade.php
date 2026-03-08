@@ -54,6 +54,30 @@
                     </div>
                 </div>
 
+                {{-- Project Analysis Card --}}
+                <a href="{{ route('team-leader.analysis.show') }}" class="block bg-white overflow-hidden shadow-sm rounded-2xl ring-1 ring-slate-200 hover:shadow-md transition">
+                    <div class="p-6 flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-brain text-xl text-orange-600"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-lg font-semibold text-slate-900">Project Analysis</h2>
+                                <p class="text-sm text-slate-500">
+                                    @if ($team->analysis_status === 'completed')
+                                        {{ $team->userStories()->where('status', 'approved')->count() }} approved stories
+                                    @elseif ($team->analysis_status === 'processing')
+                                        Generating stories...
+                                    @else
+                                        Upload documents and generate AI user stories
+                                    @endif
+                                </p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-slate-400"></i>
+                    </div>
+                </a>
+
                 {{-- Repositories Section --}}
                 <div class="bg-white overflow-hidden shadow-sm rounded-2xl ring-1 ring-slate-200">
                     <div class="border-b border-slate-200 p-6 flex items-center justify-between">

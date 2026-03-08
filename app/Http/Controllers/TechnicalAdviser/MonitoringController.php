@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\TechnicalAdviser;
 
+use App\Enums\UserStoryStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Commit;
 use App\Models\Team;
@@ -46,7 +47,7 @@ class MonitoringController extends Controller
 
         abort_unless($teamLeaderIds->contains($team->user_id), 403);
 
-        $team->load(['owner', 'repositories' => function ($query) {
+        $team->load(['owner', 'documents', 'repositories' => function ($query) {
             $query->withCount('commits');
         }]);
 
@@ -68,12 +69,23 @@ class MonitoringController extends Controller
             ->limit(20)
             ->get();
 
+        $approvedStories = $team->userStories()->where('status', UserStoryStatus::Approved)->get();
+        $totalApproved = $approvedStories->count();
+        $coveredCount = $approvedStories->where('is_covered', true)->count();
+        $gapCount = $totalApproved - $coveredCount;
+        $progressPercent = $totalApproved > 0 ? round(($coveredCount / $totalApproved) * 100) : 0;
+
         return view('technical-adviser.monitoring.show', compact(
             'team',
             'totalCommits',
             'weeklyCommits',
             'contributors',
             'recentCommits',
+            'approvedStories',
+            'totalApproved',
+            'coveredCount',
+            'gapCount',
+            'progressPercent',
         ));
     }
 }

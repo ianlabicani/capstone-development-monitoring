@@ -18,7 +18,19 @@ class Team extends Model
         'slug',
         'description',
         'logo_path',
+        'analysis_status',
+        'analysis_completed_at',
     ];
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'analysis_completed_at' => 'datetime',
+        ];
+    }
 
     public function owner(): BelongsTo
     {
@@ -28,5 +40,15 @@ class Team extends Model
     public function repositories(): HasMany
     {
         return $this->hasMany(Repository::class);
+    }
+
+    public function documents(): HasMany
+    {
+        return $this->hasMany(TeamDocument::class);
+    }
+
+    public function userStories(): HasMany
+    {
+        return $this->hasMany(UserStory::class);
     }
 }

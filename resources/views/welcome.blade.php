@@ -54,37 +54,37 @@
         </div>
     </section>
 
-    {{-- AI-Powered Insights (Coming Soon) --}}
+    {{-- AI-Powered Insights --}}
     <section class="py-12 sm:py-16 bg-white">
         <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <div class="rounded-2xl bg-gradient-to-br from-orange-50 to-orange-100 ring-1 ring-orange-200 p-8 md:p-12">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                     <div>
                         <div class="inline-flex items-center rounded-full bg-orange-200 px-4 py-1 text-sm font-semibold text-orange-800 mb-4">
-                            <i class="fas fa-sparkles mr-2"></i> Coming Soon
+                            <i class="fas fa-brain mr-2"></i> AI-Powered
                         </div>
                         <h2 class="text-3xl font-bold tracking-tight text-slate-900 mb-4">AI-Powered Commit Analysis</h2>
-                        <p class="text-lg text-slate-700 mb-6">Our AI will intelligently analyze your team's commits and correlate them with your project's user stories, providing actionable insights on development progress and alignment.</p>
+                        <p class="text-lg text-slate-700 mb-6">Upload your project documents, and our AI generates user stories automatically. The system then tracks which stories are covered by your commits — revealing development gaps at a glance.</p>
                         <div class="space-y-4">
+                            <div class="flex items-start gap-3">
+                                <i class="fas fa-file-pdf text-orange-600 mt-1 flex-shrink-0"></i>
+                                <div>
+                                    <p class="font-semibold text-slate-900">Upload Project Documents</p>
+                                    <p class="text-sm text-slate-600">Upload your SOP, proof of concept, or project introduction in PDF</p>
+                                </div>
+                            </div>
                             <div class="flex items-start gap-3">
                                 <i class="fas fa-brain text-orange-600 mt-1 flex-shrink-0"></i>
                                 <div>
-                                    <p class="font-semibold text-slate-900">Link Commits to User Stories</p>
-                                    <p class="text-sm text-slate-600">Automatically map commits to relevant user stories for better tracking</p>
+                                    <p class="font-semibold text-slate-900">AI-Generated User Stories</p>
+                                    <p class="text-sm text-slate-600">Gemini AI extracts and generates user stories from your documents</p>
                                 </div>
                             </div>
                             <div class="flex items-start gap-3">
                                 <i class="fas fa-chart-line text-orange-600 mt-1 flex-shrink-0"></i>
                                 <div>
-                                    <p class="font-semibold text-slate-900">Story Completion Insights</p>
-                                    <p class="text-sm text-slate-600">Get AI-generated reports on story progress and development velocity</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-3">
-                                <i class="fas fa-lightbulb text-orange-600 mt-1 flex-shrink-0"></i>
-                                <div>
-                                    <p class="font-semibold text-slate-900">Smart Recommendations</p>
-                                    <p class="text-sm text-slate-600">Receive AI suggestions for optimizing team workflow and productivity</p>
+                                    <p class="font-semibold text-slate-900">Gap Detection</p>
+                                    <p class="text-sm text-slate-600">Automatically identifies which stories have commits and which don't</p>
                                 </div>
                             </div>
                         </div>
@@ -95,7 +95,7 @@
                             <div class="relative bg-white rounded-2xl ring-1 ring-orange-200 p-6 text-center">
                                 <i class="fas fa-brain text-6xl text-orange-600 mb-4 block"></i>
                                 <p class="text-slate-900 font-semibold mb-2">AI Analysis Engine</p>
-                                <p class="text-sm text-slate-600">Coming in Q2 2026</p>
+                                <p class="text-sm text-slate-600">Powered by Gemini</p>
                             </div>
                         </div>
                     </div>

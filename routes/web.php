@@ -11,6 +11,7 @@ use App\Http\Controllers\DashboardRedirectController;
 use App\Http\Controllers\LeaderboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TeamLeader\AnalysisController;
 use App\Http\Controllers\TeamLeader\DashboardController;
 use App\Http\Controllers\TeamLeader\RepositoryController;
 use App\Http\Controllers\TeamLeader\TeamController;
@@ -95,6 +96,15 @@ Route::middleware(['auth', 'verified', 'permission:register repository'])->prefi
     Route::get('repositories/{repository}', [RepositoryController::class, 'show'])->name('repositories.show');
     Route::post('repositories/{repository}/sync', [RepositoryController::class, 'sync'])->name('repositories.sync');
     Route::delete('repositories/{repository}', [RepositoryController::class, 'destroy'])->name('repositories.destroy');
+
+    // Analysis
+    Route::get('team/analysis', [AnalysisController::class, 'show'])->name('analysis.show');
+    Route::post('team/documents', [AnalysisController::class, 'uploadDocument'])->name('analysis.upload-document');
+    Route::delete('team/documents/{document}', [AnalysisController::class, 'deleteDocument'])->name('analysis.delete-document');
+    Route::post('team/analysis/generate', [AnalysisController::class, 'generate'])->name('analysis.generate');
+    Route::patch('team/stories/{story}', [AnalysisController::class, 'updateStory'])->name('analysis.update-story');
+    Route::post('team/stories/{story}/approve', [AnalysisController::class, 'approveStory'])->name('analysis.approve-story');
+    Route::delete('team/stories/{story}', [AnalysisController::class, 'deleteStory'])->name('analysis.delete-story');
 });
 
 // Capstone Teacher Routes

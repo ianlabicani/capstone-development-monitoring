@@ -3,6 +3,7 @@
 use App\Models\Commit;
 use App\Models\Repository;
 use App\Models\Team;
+use App\Models\UserStory;
 
 test('public project page displays team info', function () {
     $team = Team::factory()->create([
@@ -82,4 +83,26 @@ test('public project page shows contributor count', function () {
     $this->get(route('projects.show', 'team-delta'))
         ->assertOk()
         ->assertViewHas('contributors', 2);
+});
+
+test('public project page shows analysis progress when stories exist', function () {
+    $team = Team::factory()->create(['slug' => 'team-analysis']);
+    UserStory::factory()->covered()->create(['team_id' => $team->id]);
+    UserStory::factory()->approved()->create(['team_id' => $team->id]);
+
+    $this->get(route('projects.show', 'team-analysis'))
+        ->assertOk()
+        ->assertViewHas('totalApproved', 2)
+        ->assertViewHas('coveredCount', 1)
+        ->assertViewHas('gapCount', 1)
+        ->assertViewHas('progressPercent', 50);
+});
+
+test('public project page shows not ready when no approved stories', function () {
+    $team = Team::factory()->create(['slug' => 'team-no-stories']);
+
+    $this->get(route('projects.show', 'team-no-stories'))
+        ->assertOk()
+        ->assertViewHas('totalApproved', 0)
+        ->assertSee('Not Ready');
 });

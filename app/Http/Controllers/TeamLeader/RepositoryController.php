@@ -4,6 +4,7 @@ namespace App\Http\Controllers\TeamLeader;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TeamLeader\StoreRepositoryRequest;
+use App\Jobs\MatchStoriesToCommitsJob;
 use App\Models\Repository;
 use App\Services\GitHubService;
 use Illuminate\Http\Client\RequestException;
@@ -108,6 +109,11 @@ class RepositoryController extends Controller
         }
 
         $repository->update(['last_synced_at' => now()]);
+
+        $team = $repository->team;
+        if ($team->userStories()->where('status', 'approved')->exists()) {
+            MatchStoriesToCommitsJob::dispatch($team);
+        }
 
         return back()->with('success', "Synced {$newCount} commit(s) from GitHub.");
     }

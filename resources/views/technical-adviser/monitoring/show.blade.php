@@ -33,22 +33,16 @@
             </div>
 
             <div class="space-y-6">
-                {{-- AI Analysis (Coming Soon) --}}
-                <div class="bg-white overflow-hidden shadow-sm rounded-2xl ring-1 ring-slate-200">
-                    <div class="border-b border-slate-200 p-6">
-                        <div class="flex items-center justify-between">
-                            <h2 class="text-lg font-semibold text-slate-900">AI Analysis</h2>
-                            <span class="inline-flex items-center rounded-full bg-orange-100 px-3 py-1 text-sm font-medium text-orange-800">
-                                Coming Soon
-                            </span>
-                        </div>
-                    </div>
-                    <div class="p-6 text-center">
-                        <i class="fas fa-brain text-4xl text-slate-300 mb-4 block"></i>
-                        <p class="text-slate-600 mb-4">Intelligent commit analysis against team user stories.</p>
-                        <p class="text-sm text-slate-500">We're working on AI-powered insights to correlate commits with user stories and track development progress.</p>
-                    </div>
-                </div>
+                {{-- AI Analysis --}}
+                <x-analysis-progress
+                    :totalApproved="$totalApproved"
+                    :coveredCount="$coveredCount"
+                    :gapCount="$gapCount"
+                    :progressPercent="$progressPercent"
+                    :approvedStories="$approvedStories"
+                    :showDocuments="true"
+                    :team="$team"
+                />
 
                 {{-- Repositories --}}
                 <div class="bg-white overflow-hidden shadow-sm rounded-2xl ring-1 ring-slate-200">

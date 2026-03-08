@@ -40,4 +40,9 @@ return [
         'api_url' => env('GITHUB_API_URL', 'https://api.github.com'),
     ],
 
+    'gemini' => [
+        'api_key' => env('GEMINI_API_KEY'),
+        'model' => env('GEMINI_MODEL', 'gemini-2.0-flash'),
+    ],
+
 ];
