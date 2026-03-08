@@ -21,6 +21,8 @@ class Team extends Model
         'analysis_status',
         'analysis_completed_at',
         'progress_summary',
+        'generation_count_today',
+        'generation_date',
     ];
 
     /**
@@ -30,6 +32,7 @@ class Team extends Model
     {
         return [
             'analysis_completed_at' => 'datetime',
+            'generation_date' => 'date',
         ];
     }
 

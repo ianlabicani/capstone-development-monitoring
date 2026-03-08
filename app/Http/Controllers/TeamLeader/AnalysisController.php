@@ -65,6 +65,13 @@ class AnalysisController extends Controller
         // Paginate results (15 per page)
         $stories = $query->paginate(15);
 
+        $today = now()->timezone('Asia/Manila')->toDateString();
+        $isSameDay = $team->generation_date?->toDateString() === $today;
+        $generationsToday = $isSameDay ? $team->generation_count_today : 0;
+        $generationLimitReached = $generationsToday >= 2;
+        $manilaTime = now()->timezone('Asia/Manila');
+        $secondsUntilReset = max(0, (int) $manilaTime->diffInSeconds($manilaTime->copy()->endOfDay()->addSecond()));
+
         return view('team-leader.analysis.show', compact(
             'team',
             'totalApproved',
@@ -75,6 +82,9 @@ class AnalysisController extends Controller
             'allVersions',
             'selectedVersion',
             'selectedStatus',
+            'generationsToday',
+            'generationLimitReached',
+            'secondsUntilReset',
         ));
     }
 
@@ -201,6 +211,14 @@ class AnalysisController extends Controller
 
         if ($team->analysis_status === 'processing') {
             return back()->withErrors(['generate' => 'Analysis is already being generated.']);
+        }
+
+        $today = now()->timezone('Asia/Manila')->toDateString();
+        $isSameDay = $team->generation_date?->toDateString() === $today;
+        $generationsToday = $isSameDay ? $team->generation_count_today : 0;
+
+        if ($generationsToday >= 2) {
+            return back()->withErrors(['generate' => 'Daily limit reached. You can generate again tomorrow (midnight, Manila time).']);
         }
 
         $team->update(['analysis_status' => 'processing']);

@@ -65,9 +65,14 @@ class GenerateUserStoriesJob implements ShouldQueue
                 ]);
             }
 
+            $today = now()->timezone('Asia/Manila')->toDateString();
+            $isSameDay = $this->team->generation_date?->toDateString() === $today;
+
             $this->team->update([
                 'analysis_status' => 'completed',
                 'analysis_completed_at' => now(),
+                'generation_count_today' => $isSameDay ? $this->team->generation_count_today + 1 : 1,
+                'generation_date' => $today,
             ]);
         } catch (\Throwable $e) {
             Log::error('User story generation failed', [
