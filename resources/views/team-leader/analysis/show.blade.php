@@ -40,7 +40,7 @@
                 @include('team-leader.analysis._progress-overview')
 
                 {{-- Documents Section (Hidden for presentation) --}}
-                @if (false)
+                @if (true)
                 <div class="bg-white overflow-hidden shadow-sm rounded-2xl ring-1 ring-slate-200">
                     <div class="border-b border-slate-200 p-6">
                         <h2 class="text-lg font-semibold text-slate-900">Project Documents</h2>

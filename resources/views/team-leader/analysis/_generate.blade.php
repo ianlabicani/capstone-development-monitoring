@@ -23,7 +23,7 @@
             $isProcessing = $team->analysis_status === 'processing';
         @endphp
         <div class="mt-4 flex flex-wrap items-center gap-3" x-data="{ isGenerating: false }">
-          @if (false)
+          @if (true)
               <form action="{{ route('team-leader.analysis.generate') }}" method="POST" @submit="isGenerating = true">
                 @csrf
                 <input type="hidden" name="source" value="files">
