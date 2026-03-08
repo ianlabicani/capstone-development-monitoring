@@ -104,8 +104,11 @@ Route::middleware(['auth', 'verified', 'permission:register repository'])->prefi
     Route::post('team/analysis/text', [AnalysisController::class, 'saveText'])->name('analysis.save-text');
     Route::delete('team/analysis/text', [AnalysisController::class, 'deleteText'])->name('analysis.delete-text');
     Route::post('team/analysis/generate', [AnalysisController::class, 'generate'])->name('analysis.generate');
+    Route::post('team/analysis/approve-all', [AnalysisController::class, 'approveAll'])->name('analysis.approve-all');
+    Route::post('team/stories', [AnalysisController::class, 'storeStory'])->name('analysis.store-story');
     Route::patch('team/stories/{story}', [AnalysisController::class, 'updateStory'])->name('analysis.update-story');
     Route::post('team/stories/{story}/approve', [AnalysisController::class, 'approveStory'])->name('analysis.approve-story');
+    Route::patch('team/stories/{story}/achievement', [AnalysisController::class, 'toggleAchievementStatus'])->name('analysis.toggle-achievement');
     Route::delete('team/stories/{story}', [AnalysisController::class, 'deleteStory'])->name('analysis.delete-story');
 });
 

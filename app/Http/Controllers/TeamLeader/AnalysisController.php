@@ -4,6 +4,7 @@ namespace App\Http\Controllers\TeamLeader;
 
 use App\Enums\UserStoryStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\TeamLeader\CreateUserStoryRequest;
 use App\Http\Requests\TeamLeader\SaveTextDocumentRequest;
 use App\Http\Requests\TeamLeader\UpdateUserStoryRequest;
 use App\Http\Requests\TeamLeader\UploadTeamDocumentRequest;
@@ -213,5 +214,53 @@ class AnalysisController extends Controller
         $story->delete();
 
         return back()->with('success', 'User story deleted.');
+    }
+
+    public function approveAll(): RedirectResponse
+    {
+        $team = Auth::user()->team;
+
+        abort_unless($team, 403);
+
+        $draftCount = $team->userStories()
+            ->where('status', UserStoryStatus::Draft->value)
+            ->count();
+
+        $team->userStories()
+            ->where('status', UserStoryStatus::Draft->value)
+            ->update(['status' => UserStoryStatus::Approved->value]);
+
+        return back()->with('success', "Approved {$draftCount} story".($draftCount !== 1 ? 'ies' : '').'.');
+    }
+
+    public function storeStory(CreateUserStoryRequest $request): RedirectResponse
+    {
+        $team = Auth::user()->team;
+
+        abort_unless($team, 403);
+
+        $nextSort = $team->userStories()->max('sort_order') ?? 0;
+
+        $team->userStories()->create([
+            'title' => $request->validated('title'),
+            'description' => $request->validated('description'),
+            'status' => UserStoryStatus::Draft->value,
+            'sort_order' => $nextSort + 1,
+        ]);
+
+        return back()->with('success', 'User story created.');
+    }
+
+    public function toggleAchievementStatus(UserStory $story): RedirectResponse
+    {
+        $team = Auth::user()->team;
+
+        abort_unless($team && $story->team_id === $team->id, 403);
+
+        $story->update(['is_covered' => ! $story->is_covered]);
+
+        return back()->with('success', $story->is_covered
+            ? 'Story marked as achieved.'
+            : 'Story marked as not achieved.');
     }
 }
