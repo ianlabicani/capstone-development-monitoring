@@ -534,7 +534,7 @@ test('repository sync does not dispatch matching when no approved stories', func
 // --- Versioning ---
 
 test('manually created story gets current latest version', function () {
-    UserStory::factory()->create(['team_id' => $this->team->id, 'version' => 3]);
+    UserStory::factory()->create(['team_id' => $this->team->id, 'version' => 'v3']);
 
     $this->actingAs($this->user)
         ->post(route('team-leader.analysis.store-story'), [
@@ -545,7 +545,7 @@ test('manually created story gets current latest version', function () {
         ->assertSessionHas('success');
 
     $manual = UserStory::where('team_id', $this->team->id)->where('title', 'Manual story')->first();
-    expect($manual->version)->toBe(3);
+    expect($manual->version)->toBe('v3');
 });
 
 test('manually created story defaults to version 1 when no stories exist', function () {
@@ -557,16 +557,16 @@ test('manually created story defaults to version 1 when no stories exist', funct
         ->assertRedirect();
 
     $story = UserStory::where('team_id', $this->team->id)->first();
-    expect($story->version)->toBe(1);
+    expect($story->version)->toBe('v1');
 });
 
 // --- Manual Achievement Tracking ---
 
-test('toggling achievement sets manually_marked flag', function () {
+test('toggling achievement sets manually_achieved_at timestamp', function () {
     $story = UserStory::factory()->approved()->create([
         'team_id' => $this->team->id,
-        'is_covered' => false,
-        'manually_marked' => false,
+        'is_achieved' => false,
+        'manually_achieved_at' => null,
     ]);
 
     $this->actingAs($this->user)
@@ -574,8 +574,8 @@ test('toggling achievement sets manually_marked flag', function () {
         ->assertRedirect();
 
     $story->refresh();
-    expect($story->is_covered)->toBeTrue();
-    expect($story->manually_marked)->toBeTrue();
+    expect($story->is_achieved)->toBeTrue();
+    expect($story->manually_achieved_at)->not->toBeNull();
 });
 
 test('matching service skips manually marked stories', function () {

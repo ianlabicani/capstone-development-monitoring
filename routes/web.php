@@ -15,6 +15,7 @@ use App\Http\Controllers\TeamLeader\AnalysisController;
 use App\Http\Controllers\TeamLeader\DashboardController;
 use App\Http\Controllers\TeamLeader\RepositoryController;
 use App\Http\Controllers\TeamLeader\TeamController;
+use App\Http\Controllers\TeamLeader\UserStoryController;
 use App\Http\Controllers\TechnicalAdviser\MonitoringController;
 use App\Http\Controllers\TechnicalAdviser\TeamLeaderController;
 use Illuminate\Support\Facades\Route;
@@ -105,12 +106,14 @@ Route::middleware(['auth', 'verified', 'permission:register repository'])->prefi
     Route::post('team/analysis/text', [AnalysisController::class, 'saveText'])->name('analysis.save-text');
     Route::delete('team/analysis/text', [AnalysisController::class, 'deleteText'])->name('analysis.delete-text');
     Route::post('team/analysis/generate', [AnalysisController::class, 'generate'])->name('analysis.generate');
-    Route::post('team/analysis/approve-all', [AnalysisController::class, 'approveAll'])->name('analysis.approve-all');
-    Route::post('team/stories', [AnalysisController::class, 'storeStory'])->name('analysis.store-story');
-    Route::patch('team/stories/{story}', [AnalysisController::class, 'updateStory'])->name('analysis.update-story');
-    Route::post('team/stories/{story}/approve', [AnalysisController::class, 'approveStory'])->name('analysis.approve-story');
-    Route::patch('team/stories/{story}/achievement', [AnalysisController::class, 'toggleAchievementStatus'])->name('analysis.toggle-achievement');
-    Route::delete('team/stories/{story}', [AnalysisController::class, 'deleteStory'])->name('analysis.delete-story');
+
+    // User Stories
+    Route::post('team/analysis/approve-all', [UserStoryController::class, 'approveAll'])->name('analysis.approve-all');
+    Route::post('team/stories', [UserStoryController::class, 'store'])->name('analysis.store-story');
+    Route::patch('team/stories/{story}', [UserStoryController::class, 'update'])->name('analysis.update-story');
+    Route::post('team/stories/{story}/approve', [UserStoryController::class, 'approve'])->name('analysis.approve-story');
+    Route::patch('team/stories/{story}/achievement', [UserStoryController::class, 'toggleAchievementStatus'])->name('analysis.toggle-achievement');
+    Route::delete('team/stories/{story}', [UserStoryController::class, 'delete'])->name('analysis.delete-story');
 });
 
 // Capstone Teacher Routes

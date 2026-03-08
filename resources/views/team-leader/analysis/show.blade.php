@@ -218,43 +218,56 @@
                             $hasText = $team->documents->firstWhere('type', 'text') !== null;
                             $isProcessing = $team->analysis_status === 'processing';
                         @endphp
-                        <div class="mt-4 flex flex-wrap items-center gap-3">
-                            <form action="{{ route('team-leader.analysis.generate') }}" method="POST" x-data="{ loading: false }" @submit="loading = true">
+                        <div class="mt-4 flex flex-wrap items-center gap-3" x-data="{ isGenerating: false }">
+                            <form action="{{ route('team-leader.analysis.generate') }}" method="POST" @submit="isGenerating = true">
                                 @csrf
                                 <input type="hidden" name="source" value="files">
                                 <button
                                     type="submit"
                                     @if (!$hasFiles || $isProcessing) disabled @endif
                                     class="inline-flex items-center rounded-lg bg-orange-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    :disabled="loading"
+                                    :disabled="isGenerating"
                                 >
-                                    <template x-if="loading">
+                                    <template x-if="isGenerating">
                                         <i class='fas fa-spinner fa-spin mr-2'></i>
                                     </template>
-                                    <template x-if="!loading">
+                                    <template x-if="!isGenerating">
                                         <i class="fas fa-file-alt mr-2"></i>
                                     </template>
-                                    <span x-text="loading ? 'Generating...' : 'Generate from Files'"></span>
+                                    <span x-text="isGenerating ? 'Generating...' : 'Generate from Files'"></span>
                                 </button>
                             </form>
-                            <form action="{{ route('team-leader.analysis.generate') }}" method="POST" x-data="{ loading: false }" @submit="loading = true">
+                            <form action="{{ route('team-leader.analysis.generate') }}" method="POST" @submit="isGenerating = true">
                                 @csrf
                                 <input type="hidden" name="source" value="text">
                                 <button
                                     type="submit"
                                     @if (!$hasText || $isProcessing) disabled @endif
                                     class="inline-flex items-center rounded-lg border-2 border-orange-600 px-5 py-2.5 text-sm font-semibold text-orange-600 hover:bg-orange-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    :disabled="loading"
+                                    :disabled="isGenerating"
                                 >
-                                    <template x-if="loading">
+                                    <template x-if="isGenerating">
                                         <i class='fas fa-spinner fa-spin mr-2'></i>
                                     </template>
-                                    <template x-if="!loading">
+                                    <template x-if="!isGenerating">
                                         <i class="fas fa-align-left mr-2"></i>
                                     </template>
-                                    <span x-text="loading ? 'Generating...' : 'Generate from Description'"></span>
+                                    <span x-text="isGenerating ? 'Generating...' : 'Generate from Description'"></span>
                                 </button>
                             </form>
+                        </div>
+                        <div class="mt-3" x-data="{ show: false }" x-init="$watch('document.title', () => { if(new URLSearchParams(window.location.search).has('justGenerated')) { show = true; setTimeout(() => show = false, 6000); } })">
+                            <template x-if="show">
+                                <div class="relative rounded-lg bg-blue-50 p-4 ring-1 ring-blue-200">
+                                    <div class="flex items-start gap-3">
+                                        <i class="fas fa-info-circle text-lg text-blue-600 mt-0.5"></i>
+                                        <div class="text-sm text-blue-700">
+                                            <p class="font-semibold">Generation started!</p>
+                                            <p class="mt-1">Analysis is processing in the background. Come back in a few minutes to review the new user stories.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -282,14 +295,101 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="divide-y divide-slate-200">
-                            @foreach ($team->userStories->sortByDesc('version')->groupBy('version') as $version => $stories)
-                                <div class="bg-slate-50 px-6 py-3 border-b border-slate-200">
-                                    <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Version {{ $version }}</span>
-                                    <span class="ml-2 text-xs text-slate-400">({{ $stories->count() }} {{ Str::plural('story', $stories->count()) }})</span>
+                        @php
+                            $versions = $team->userStories->pluck('version')->unique()->sort()->reverse()->values();
+                        @endphp
+                        <div x-data="{ selectedVersion: null, selectedStatus: 'all', sortOrder: 'asc' }">
+                            @if ($versions->count() > 1)
+                                <div class="border-t border-slate-200 p-6">
+                                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Filter by version</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        <button
+                                            @click="selectedVersion = null"
+                                            :class="{ 'bg-orange-600 text-white ring-orange-600': selectedVersion === null, 'bg-slate-100 text-slate-700 ring-slate-200': selectedVersion !== null }"
+                                            class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition"
+                                        >
+                                            All Versions
+                                        </button>
+                                        @foreach ($versions as $version)
+                                            <button
+                                                @click="selectedVersion = '{{ $version }}'"
+                                                :class="{ 'bg-orange-600 text-white ring-orange-600': selectedVersion === '{{ $version }}', 'bg-slate-100 text-slate-700 ring-slate-200': selectedVersion !== '{{ $version }}' }"
+                                                class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition"
+                                            >
+                                                {{ $version }}
+                                            </button>
+                                        @endforeach
+                                    </div>
                                 </div>
-                                @foreach ($stories->sortBy('sort_order') as $story)
-                                <div class="p-6" x-data="{ editing: false }">
+                            @endif
+                            
+                            {{-- Status and Sort Filters --}}
+                            <div class="border-t border-slate-200 p-6">
+                                <div class="space-y-4">
+                                    <div>
+                                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Filter by status</p>
+                                        <div class="flex flex-wrap gap-2">
+                                            <button
+                                                @click="selectedStatus = 'all'"
+                                                :class="{ 'bg-orange-600 text-white ring-orange-600': selectedStatus === 'all', 'bg-slate-100 text-slate-700 ring-slate-200': selectedStatus !== 'all' }"
+                                                class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition"
+                                            >
+                                                All
+                                            </button>
+                                            <button
+                                                @click="selectedStatus = 'approved'"
+                                                :class="{ 'bg-orange-600 text-white ring-orange-600': selectedStatus === 'approved', 'bg-slate-100 text-slate-700 ring-slate-200': selectedStatus !== 'approved' }"
+                                                class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition"
+                                            >
+                                                <i class="fas fa-check mr-1.5"></i> Approved
+                                            </button>
+                                            <button
+                                                @click="selectedStatus = 'draft'"
+                                                :class="{ 'bg-orange-600 text-white ring-orange-600': selectedStatus === 'draft', 'bg-slate-100 text-slate-700 ring-slate-200': selectedStatus !== 'draft' }"
+                                                class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition"
+                                            >
+                                                <i class="fas fa-pencil mr-1.5"></i> Draft
+                                            </button>
+                                            <button
+                                                @click="selectedStatus = 'gap'"
+                                                :class="{ 'bg-orange-600 text-white ring-orange-600': selectedStatus === 'gap', 'bg-slate-100 text-slate-700 ring-slate-200': selectedStatus !== 'gap' }"
+                                                class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition"
+                                            >
+                                                <i class="fas fa-exclamation mr-1.5"></i> Gaps
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Sort by title</p>
+                                        <div class="flex gap-2">
+                                            <button
+                                                @click="sortOrder = 'asc'"
+                                                :class="{ 'bg-orange-600 text-white ring-orange-600': sortOrder === 'asc', 'bg-slate-100 text-slate-700 ring-slate-200': sortOrder !== 'asc' }"
+                                                class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition"
+                                            >
+                                                <i class="fas fa-arrow-up mr-1.5"></i> A-Z
+                                            </button>
+                                            <button
+                                                @click="sortOrder = 'desc'"
+                                                :class="{ 'bg-orange-600 text-white ring-orange-600': sortOrder === 'desc', 'bg-slate-100 text-slate-700 ring-slate-200': sortOrder !== 'desc' }"
+                                                class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition"
+                                            >
+                                                <i class="fas fa-arrow-down mr-1.5"></i> Z-A
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="divide-y divide-slate-200" x-data="{ getFilteredStories() { return [] } }" x-init="stories = @json($team->userStories->toArray())">
+                                @foreach ($team->userStories->sortByDesc('version')->groupBy('version') as $version => $stories)
+                                    <div x-show="selectedVersion === null || selectedVersion === {{ $version }}">
+                                        <div class="bg-slate-50 px-6 py-3 border-b border-slate-200">
+                                            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Version {{ $version }}</span>
+                                            <span class="ml-2 text-xs text-slate-400">({{ $stories->count() }} {{ Str::plural('story', $stories->count()) }})</span>
+                                        </div>
+                                    @foreach ($stories->sortBy('sort_order') as $story)
+                                <div class="p-6" x-data="{ editing: false }" x-show="(selectedVersion === null || selectedVersion === '{{ $story->version }}') && (selectedStatus === 'all' || (selectedStatus === 'approved' && {{ $story->status === \App\Enums\UserStoryStatus::Approved ? 'true' : 'false' }}) || (selectedStatus === 'draft' && {{ $story->status === \App\Enums\UserStoryStatus::Draft ? 'true' : 'false' }}) || (selectedStatus === 'gap' && {{ $story->status === \App\Enums\UserStoryStatus::Approved && !$story->is_covered ? 'true' : 'false' }}))" @change.window="$watch('sortOrder', () => sortOrder)">
                                     <div class="flex items-start justify-between gap-4">
                                         <div class="flex-1">
                                             <div class="flex items-center gap-2 mb-1">
@@ -297,7 +397,7 @@
                                                 @if ($story->status === \App\Enums\UserStoryStatus::Approved)
                                                     @if ($story->is_covered)
                                                         <span class="inline-flex items-center rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800">
-                                                            <i class="fas fa-check mr-1"></i> Covered{{ $story->manually_marked ? ' (Manual)' : '' }}
+                                                            <i class="fas fa-check mr-1"></i> Covered{{ $story->manually_achieved_at ? ' (Manual)' : '' }}
                                                         </span>
                                                     @else
                                                         <span class="inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800">
@@ -308,6 +408,11 @@
                                                 <span class="inline-flex items-center rounded-full bg-{{ $story->status->color() }}-100 px-2 py-0.5 text-xs font-medium text-{{ $story->status->color() }}-800">
                                                     {{ $story->status->label() }}
                                                 </span>
+                                                @if ($story->manually_created)
+                                                    <span class="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800">
+                                                        <i class="fas fa-hand mr-1"></i> Manual
+                                                    </span>
+                                                @endif
                                                 <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500">
                                                     v{{ $story->version }}
                                                 </span>
@@ -384,7 +489,9 @@
                                     </div>
                                 </div>
                             @endforeach
+                                </div>
                             @endforeach
+                            </div>
                         </div>
                     </div>
 

@@ -4,14 +4,11 @@ namespace App\Http\Controllers\TeamLeader;
 
 use App\Enums\UserStoryStatus;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\TeamLeader\CreateUserStoryRequest;
 use App\Http\Requests\TeamLeader\SaveTextDocumentRequest;
-use App\Http\Requests\TeamLeader\UpdateUserStoryRequest;
 use App\Http\Requests\TeamLeader\UploadTeamDocumentRequest;
 use App\Jobs\GenerateUserStoriesJob;
 use App\Jobs\MatchStoriesToCommitsJob;
 use App\Models\TeamDocument;
-use App\Models\UserStory;
 use App\Services\GitHubService;
 use App\Services\ProgressSummaryService;
 use Illuminate\Http\Client\RequestException;
@@ -175,102 +172,7 @@ class AnalysisController extends Controller
 
         GenerateUserStoriesJob::dispatch($team, $source);
 
-        return back()->with('success', 'Analysis generation started. This may take a moment.');
-    }
-
-    public function updateStory(UpdateUserStoryRequest $request, UserStory $story): RedirectResponse
-    {
-        $team = Auth::user()->team;
-
-        abort_unless($team && $story->team_id === $team->id, 403);
-
-        $story->update([
-            'title' => $request->validated('title'),
-            'description' => $request->validated('description'),
-        ]);
-
-        return back()->with('success', 'User story updated.');
-    }
-
-    public function approveStory(UserStory $story): RedirectResponse
-    {
-        $team = Auth::user()->team;
-
-        abort_unless($team && $story->team_id === $team->id, 403);
-
-        $newStatus = $story->status === UserStoryStatus::Approved
-            ? UserStoryStatus::Draft
-            : UserStoryStatus::Approved;
-
-        $story->update(['status' => $newStatus->value]);
-
-        return back()->with('success', $newStatus === UserStoryStatus::Approved
-            ? 'Story approved.'
-            : 'Story moved back to draft.');
-    }
-
-    public function deleteStory(UserStory $story): RedirectResponse
-    {
-        $team = Auth::user()->team;
-
-        abort_unless($team && $story->team_id === $team->id, 403);
-
-        $story->delete();
-
-        return back()->with('success', 'User story deleted.');
-    }
-
-    public function approveAll(): RedirectResponse
-    {
-        $team = Auth::user()->team;
-
-        abort_unless($team, 403);
-
-        $draftCount = $team->userStories()
-            ->where('status', UserStoryStatus::Draft->value)
-            ->count();
-
-        $team->userStories()
-            ->where('status', UserStoryStatus::Draft->value)
-            ->update(['status' => UserStoryStatus::Approved->value]);
-
-        return back()->with('success', "Approved {$draftCount} story".($draftCount !== 1 ? 'ies' : '').'.');
-    }
-
-    public function storeStory(CreateUserStoryRequest $request): RedirectResponse
-    {
-        $team = Auth::user()->team;
-
-        abort_unless($team, 403);
-
-        $nextSort = $team->userStories()->max('sort_order') ?? 0;
-        $currentVersion = $team->userStories()->max('version') ?? 1;
-
-        $team->userStories()->create([
-            'title' => $request->validated('title'),
-            'description' => $request->validated('description'),
-            'status' => UserStoryStatus::Draft->value,
-            'sort_order' => $nextSort + 1,
-            'version' => $currentVersion,
-        ]);
-
-        return back()->with('success', 'User story created.');
-    }
-
-    public function toggleAchievementStatus(UserStory $story): RedirectResponse
-    {
-        $team = Auth::user()->team;
-
-        abort_unless($team && $story->team_id === $team->id, 403);
-
-        $story->update([
-            'is_covered' => ! $story->is_covered,
-            'manually_marked' => true,
-        ]);
-
-        return back()->with('success', $story->is_covered
-            ? 'Story marked as achieved.'
-            : 'Story marked as not achieved.');
+        return back()->with('success', 'Analysis generation started. Come back in a few minutes to review the generated stories.');
     }
 
     public function syncAnalysis(GitHubService $github, ProgressSummaryService $summaryService): RedirectResponse
