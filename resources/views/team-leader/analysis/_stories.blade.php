@@ -189,7 +189,7 @@
         @endif
 
         {{-- Delete Confirmation Modal (Fixed) --}}
-        <div x-cloak x-show="deleteModalOpen && storyToDelete" @click.self="deleteModalOpen = false" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+        <div x-cloak x-show="deleteModalOpen && storyToDelete" @click.self="deleteModalOpen = false" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" style="display: none">
             <div class="relative w-full max-w-sm mx-4 rounded-2xl bg-white shadow-xl ring-1 ring-slate-200">
                 {{-- Modal Header --}}
                 <div class="border-b border-slate-200 px-6 py-4">
