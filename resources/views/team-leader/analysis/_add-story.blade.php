@@ -5,7 +5,7 @@
         <p class="mt-1 text-sm text-slate-500">Create user stories directly without AI analysis</p>
     </div>
     <div class="p-6">
-        <form action="{{ route('team-leader.analysis.store-story') }}" method="POST" class="space-y-4" x-data="{ loading: false }" @submit="loading = true">
+        <form action="{{ route('team-leader.analysis.store-story') }}" method="POST" class="space-y-4">
             @csrf
             <div>
                 <label for="story_title" class="block text-sm font-medium text-slate-900 mb-1">Story Title</label>
@@ -40,15 +40,8 @@
                 <button
                     type="submit"
                     class="inline-flex items-center rounded-lg bg-orange-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-orange-700"
-                    :disabled="loading"
                 >
-                    <template x-if="loading">
-                        <i class='fas fa-spinner fa-spin mr-2'></i>
-                    </template>
-                    <template x-if="!loading">
-                        <i class="fas fa-plus mr-2"></i>
-                    </template>
-                    <span x-text="loading ? 'Adding...' : 'Add Story'"></span>
+                    <i class="fas fa-plus mr-2"></i> Add Story
                 </button>
             </div>
         </form>
