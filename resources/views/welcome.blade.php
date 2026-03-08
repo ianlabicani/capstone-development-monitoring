@@ -64,13 +64,13 @@
                             <i class="fas fa-brain mr-2"></i> AI-Powered
                         </div>
                         <h2 class="text-3xl font-bold tracking-tight text-slate-900 mb-4">AI-Powered Commit Analysis</h2>
-                        <p class="text-lg text-slate-700 mb-6">Upload your project documents, and our AI generates user stories automatically. The system then tracks which stories are covered by your commits — revealing development gaps at a glance.</p>
+                        <p class="text-lg text-slate-700 mb-6">Upload your project documents or describe your project in plain text, and our AI generates user stories automatically. The system then tracks which stories are covered by your commits — revealing development gaps at a glance.</p>
                         <div class="space-y-4">
                             <div class="flex items-start gap-3">
                                 <i class="fas fa-file-pdf text-orange-600 mt-1 flex-shrink-0"></i>
                                 <div>
                                     <p class="font-semibold text-slate-900">Upload Project Documents</p>
-                                    <p class="text-sm text-slate-600">Upload your SOP, proof of concept, or project introduction in PDF</p>
+                                    <p class="text-sm text-slate-600">Upload in PDF or TXT format, or provide a plaintext description of your project directly in the platform</p>
                                 </div>
                             </div>
                             <div class="flex items-start gap-3">
