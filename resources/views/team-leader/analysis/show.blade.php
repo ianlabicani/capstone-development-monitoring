@@ -37,7 +37,7 @@
 
             <div class="space-y-6">
                 {{-- Progress Overview --}}
-                @include('team-leader.analysis._progress-overview')
+                @include('team-leader.analysis._progress-overview', ['team' => $team])
 
                 {{-- Documents Section (Hidden for presentation) --}}
                 @if (false)
@@ -96,23 +96,23 @@
                 @endif
 
                 {{-- Project Description --}}
-                @include('team-leader.analysis._description')
+                @include('team-leader.analysis._description', ['team' => $team])
 
                 {{-- Generate Button --}}
-                @include('team-leader.analysis._generate')
+                @include('team-leader.analysis._generate', ['team' => $team])
 
                 {{-- User Stories --}}
-                @include('team-leader.analysis._stories')
+                @include('team-leader.analysis._stories', ['team' => $team, 'stories' => $stories, 'allVersions' => $allVersions, 'selectedVersion' => $selectedVersion, 'selectedStatus' => $selectedStatus])
 
                 {{-- Add Manual Story or Empty State --}}
                 @if ($team->userStories->count() === 0)
                     @if ($team->documents->isEmpty())
-                        @include('team-leader.analysis._empty-state')
+                        @include('team-leader.analysis._empty-state', ['team' => $team])
                     @else
-                        @include('team-leader.analysis._add-story')
+                        @include('team-leader.analysis._add-story', ['team' => $team])
                     @endif
                 @else
-                    @include('team-leader.analysis._add-story')
+                    @include('team-leader.analysis._add-story', ['team' => $team])
                 @endif
             </div>
         </div>

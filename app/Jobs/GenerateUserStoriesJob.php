@@ -27,18 +27,17 @@ class GenerateUserStoriesJob implements ShouldQueue
 
     public function handle(PdfExtractorService $pdfExtractor, GeminiService $gemini): void
     {
-        $this->team->update(['analysis_status' => 'processing']);
-
         try {
             $text = $this->extractText($pdfExtractor);
 
             if (empty(trim($text))) {
-                $this->team->update(['analysis_status' => 'stale']);
+                $this->team->update(['analysis_status' => 'failed']);
 
                 return;
             }
 
             $existingStories = $this->team->userStories()
+                ->where('status', 'approved')
                 ->select('title', 'description')
                 ->get()
                 ->map(fn ($s): array => ['title' => $s->title, 'description' => $s->description ?? ''])
@@ -47,7 +46,7 @@ class GenerateUserStoriesJob implements ShouldQueue
             $stories = $gemini->generateUserStories(trim($text), $existingStories);
 
             if (empty($stories)) {
-                $this->team->update(['analysis_status' => 'stale']);
+                $this->team->update(['analysis_status' => 'failed']);
 
                 return;
             }
@@ -76,7 +75,7 @@ class GenerateUserStoriesJob implements ShouldQueue
                 'error' => $e->getMessage(),
             ]);
 
-            $this->team->update(['analysis_status' => 'stale']);
+            $this->team->update(['analysis_status' => 'failed']);
 
             throw $e;
         }

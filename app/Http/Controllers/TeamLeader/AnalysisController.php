@@ -42,7 +42,7 @@ class AnalysisController extends Controller
 
         // Get filter parameters from URL with defaults
         $selectedVersion = $request->query('version', $latestVersion);
-        $selectedStatus = $request->query('status', 'gap');
+        $selectedStatus = $request->query('status', 'draft');
 
         // Build the query
         $query = $team->userStories();
@@ -203,6 +203,7 @@ class AnalysisController extends Controller
             return back()->withErrors(['generate' => 'Analysis is already being generated.']);
         }
 
+        $team->update(['analysis_status' => 'processing']);
         GenerateUserStoriesJob::dispatch($team, $source);
 
         return back()->with('success', 'Analysis generation started. Come back in a few minutes to review the generated stories.');
