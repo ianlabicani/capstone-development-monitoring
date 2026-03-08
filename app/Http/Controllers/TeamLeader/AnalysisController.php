@@ -43,10 +43,14 @@ class AnalysisController extends Controller
         // Get filter parameters from URL with defaults
         $selectedVersion = $request->query('version', $latestVersion);
         $selectedStatus = $request->query('status', 'gap');
-        $sortOrder = $request->query('sort', 'asc');
 
         // Build the query
-        $query = $team->userStories()->where('version', $selectedVersion);
+        $query = $team->userStories();
+
+        // Filter by version (optional - if not 'all')
+        if ($selectedVersion !== 'all') {
+            $query = $query->where('version', $selectedVersion);
+        }
 
         // Apply status filter
         if ($selectedStatus === 'approved') {
@@ -56,13 +60,6 @@ class AnalysisController extends Controller
         } elseif ($selectedStatus === 'gap') {
             // Gaps = Approved but not covered
             $query = $query->where('status', UserStoryStatus::Approved)->where('is_covered', false);
-        }
-
-        // Apply sort
-        if ($sortOrder === 'asc') {
-            $query = $query->orderBy('title', 'asc');
-        } else {
-            $query = $query->orderBy('title', 'desc');
         }
 
         // Paginate results (15 per page)
@@ -78,7 +75,6 @@ class AnalysisController extends Controller
             'allVersions',
             'selectedVersion',
             'selectedStatus',
-            'sortOrder',
         ));
     }
 

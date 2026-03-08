@@ -309,9 +309,15 @@
                                 <div>
                                     <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Filter by version</p>
                                     <div class="flex flex-wrap gap-2">
+                                        <a
+                                            href="{{ route('team-leader.analysis.show', ['version' => 'all', 'status' => $selectedStatus]) }}"
+                                            class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition {{ $selectedVersion === 'all' ? 'bg-orange-600 text-white ring-orange-600' : 'bg-slate-100 text-slate-700 ring-slate-200' }}"
+                                        >
+                                            All Versions
+                                        </a>
                                         @foreach ($allVersions as $version)
                                             <a
-                                                href="{{ route('team-leader.analysis.show', ['version' => $version, 'status' => $selectedStatus, 'sort' => $sortOrder]) }}"
+                                                href="{{ route('team-leader.analysis.show', ['version' => $version, 'status' => $selectedStatus]) }}"
                                                 class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition {{ $selectedVersion === $version ? 'bg-orange-600 text-white ring-orange-600' : 'bg-slate-100 text-slate-700 ring-slate-200' }}"
                                             >
                                                 {{ $version }}
@@ -326,41 +332,22 @@
                                 <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Filter by status</p>
                                 <div class="flex flex-wrap gap-2">
                                     <a
-                                        href="{{ route('team-leader.analysis.show', ['version' => $selectedVersion, 'status' => 'gap', 'sort' => $sortOrder]) }}"
+                                        href="{{ route('team-leader.analysis.show', ['version' => $selectedVersion, 'status' => 'gap']) }}"
                                         class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition {{ $selectedStatus === 'gap' ? 'bg-orange-600 text-white ring-orange-600' : 'bg-slate-100 text-slate-700 ring-slate-200' }}"
                                     >
                                         <i class="fas fa-exclamation mr-1.5"></i> Gaps
                                     </a>
                                     <a
-                                        href="{{ route('team-leader.analysis.show', ['version' => $selectedVersion, 'status' => 'approved', 'sort' => $sortOrder]) }}"
+                                        href="{{ route('team-leader.analysis.show', ['version' => $selectedVersion, 'status' => 'approved']) }}"
                                         class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition {{ $selectedStatus === 'approved' ? 'bg-orange-600 text-white ring-orange-600' : 'bg-slate-100 text-slate-700 ring-slate-200' }}"
                                     >
                                         <i class="fas fa-check mr-1.5"></i> Approved
                                     </a>
                                     <a
-                                        href="{{ route('team-leader.analysis.show', ['version' => $selectedVersion, 'status' => 'draft', 'sort' => $sortOrder]) }}"
+                                        href="{{ route('team-leader.analysis.show', ['version' => $selectedVersion, 'status' => 'draft']) }}"
                                         class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition {{ $selectedStatus === 'draft' ? 'bg-orange-600 text-white ring-orange-600' : 'bg-slate-100 text-slate-700 ring-slate-200' }}"
                                     >
                                         <i class="fas fa-pencil mr-1.5"></i> Draft
-                                    </a>
-                                </div>
-                            </div>
-
-                            {{-- Sort --}}
-                            <div>
-                                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Sort by title</p>
-                                <div class="flex gap-2">
-                                    <a
-                                        href="{{ route('team-leader.analysis.show', ['version' => $selectedVersion, 'status' => $selectedStatus, 'sort' => 'asc']) }}"
-                                        class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition {{ $sortOrder === 'asc' ? 'bg-orange-600 text-white ring-orange-600' : 'bg-slate-100 text-slate-700 ring-slate-200' }}"
-                                    >
-                                        <i class="fas fa-arrow-up mr-1.5"></i> A-Z
-                                    </a>
-                                    <a
-                                        href="{{ route('team-leader.analysis.show', ['version' => $selectedVersion, 'status' => $selectedStatus, 'sort' => 'desc']) }}"
-                                        class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition {{ $sortOrder === 'desc' ? 'bg-orange-600 text-white ring-orange-600' : 'bg-slate-100 text-slate-700 ring-slate-200' }}"
-                                    >
-                                        <i class="fas fa-arrow-down mr-1.5"></i> Z-A
                                     </a>
                                 </div>
                             </div>
