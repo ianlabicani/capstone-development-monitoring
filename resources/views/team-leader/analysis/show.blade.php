@@ -45,7 +45,7 @@
                                 @csrf
                                 <button
                                     type="submit"
-                                    class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+                                    class="inline-flex items-center rounded-lg bg-orange-600 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-700"
                                 >
                                     <i class="fas fa-sync mr-2"></i> Sync Now
                                 </button>
