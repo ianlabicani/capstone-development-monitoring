@@ -29,12 +29,17 @@ class StoryMatchingService
             ->all();
 
         if (empty($commitMessages)) {
-            $stories->each(fn ($story) => $story->update(['is_covered' => false]));
+            $stories->where('manually_marked', false)
+                ->each(fn ($story) => $story->update(['is_covered' => false]));
 
             return;
         }
 
         foreach ($stories as $story) {
+            if ($story->manually_marked) {
+                continue;
+            }
+
             $keywords = $story->keywords ?? [];
             $isCovered = $this->hasKeywordMatch($keywords, $commitMessages);
             $story->update(['is_covered' => $isCovered]);

@@ -283,7 +283,12 @@
                             </div>
                         </div>
                         <div class="divide-y divide-slate-200">
-                            @foreach ($team->userStories->sortBy('sort_order') as $story)
+                            @foreach ($team->userStories->sortByDesc('version')->groupBy('version') as $version => $stories)
+                                <div class="bg-slate-50 px-6 py-3 border-b border-slate-200">
+                                    <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Version {{ $version }}</span>
+                                    <span class="ml-2 text-xs text-slate-400">({{ $stories->count() }} {{ Str::plural('story', $stories->count()) }})</span>
+                                </div>
+                                @foreach ($stories->sortBy('sort_order') as $story)
                                 <div class="p-6" x-data="{ editing: false }">
                                     <div class="flex items-start justify-between gap-4">
                                         <div class="flex-1">
@@ -292,7 +297,7 @@
                                                 @if ($story->status === \App\Enums\UserStoryStatus::Approved)
                                                     @if ($story->is_covered)
                                                         <span class="inline-flex items-center rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800">
-                                                            <i class="fas fa-check mr-1"></i> Covered
+                                                            <i class="fas fa-check mr-1"></i> Covered{{ $story->manually_marked ? ' (Manual)' : '' }}
                                                         </span>
                                                     @else
                                                         <span class="inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800">
@@ -302,6 +307,9 @@
                                                 @endif
                                                 <span class="inline-flex items-center rounded-full bg-{{ $story->status->color() }}-100 px-2 py-0.5 text-xs font-medium text-{{ $story->status->color() }}-800">
                                                     {{ $story->status->label() }}
+                                                </span>
+                                                <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500">
+                                                    v{{ $story->version }}
                                                 </span>
                                             </div>
 
@@ -375,6 +383,7 @@
                                         </div>
                                     </div>
                                 </div>
+                            @endforeach
                             @endforeach
                         </div>
                     </div>

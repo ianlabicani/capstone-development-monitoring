@@ -530,3 +530,98 @@ test('repository sync does not dispatch matching when no approved stories', func
 
     Queue::assertNotPushed(MatchStoriesToCommitsJob::class);
 });
+
+// --- Versioning ---
+
+test('manually created story gets current latest version', function () {
+    UserStory::factory()->create(['team_id' => $this->team->id, 'version' => 3]);
+
+    $this->actingAs($this->user)
+        ->post(route('team-leader.analysis.store-story'), [
+            'title' => 'Manual story',
+            'description' => 'A manual story',
+        ])
+        ->assertRedirect()
+        ->assertSessionHas('success');
+
+    $manual = UserStory::where('team_id', $this->team->id)->where('title', 'Manual story')->first();
+    expect($manual->version)->toBe(3);
+});
+
+test('manually created story defaults to version 1 when no stories exist', function () {
+    $this->actingAs($this->user)
+        ->post(route('team-leader.analysis.store-story'), [
+            'title' => 'First story',
+            'description' => 'The first one',
+        ])
+        ->assertRedirect();
+
+    $story = UserStory::where('team_id', $this->team->id)->first();
+    expect($story->version)->toBe(1);
+});
+
+// --- Manual Achievement Tracking ---
+
+test('toggling achievement sets manually_marked flag', function () {
+    $story = UserStory::factory()->approved()->create([
+        'team_id' => $this->team->id,
+        'is_covered' => false,
+        'manually_marked' => false,
+    ]);
+
+    $this->actingAs($this->user)
+        ->patch(route('team-leader.analysis.toggle-achievement', $story))
+        ->assertRedirect();
+
+    $story->refresh();
+    expect($story->is_covered)->toBeTrue();
+    expect($story->manually_marked)->toBeTrue();
+});
+
+test('matching service skips manually marked stories', function () {
+    $repo = Repository::factory()->create(['team_id' => $this->team->id]);
+    Commit::factory()->create([
+        'repository_id' => $repo->id,
+        'message' => 'Fix CSS styling issues',
+    ]);
+
+    $manualStory = UserStory::factory()->approved()->create([
+        'team_id' => $this->team->id,
+        'keywords' => ['payment', 'checkout'],
+        'is_covered' => true,
+        'manually_marked' => true,
+    ]);
+
+    $autoStory = UserStory::factory()->approved()->create([
+        'team_id' => $this->team->id,
+        'keywords' => ['payment', 'checkout'],
+        'is_covered' => false,
+        'manually_marked' => false,
+    ]);
+
+    $matcher = new StoryMatchingService;
+    $matcher->matchForTeam($this->team);
+
+    expect($manualStory->fresh()->is_covered)->toBeTrue();
+    expect($autoStory->fresh()->is_covered)->toBeFalse();
+});
+
+test('matching service skips manually marked stories when no commits exist', function () {
+    $manualStory = UserStory::factory()->approved()->create([
+        'team_id' => $this->team->id,
+        'is_covered' => true,
+        'manually_marked' => true,
+    ]);
+
+    $autoStory = UserStory::factory()->approved()->create([
+        'team_id' => $this->team->id,
+        'is_covered' => true,
+        'manually_marked' => false,
+    ]);
+
+    $matcher = new StoryMatchingService;
+    $matcher->matchForTeam($this->team);
+
+    expect($manualStory->fresh()->is_covered)->toBeTrue();
+    expect($autoStory->fresh()->is_covered)->toBeFalse();
+});

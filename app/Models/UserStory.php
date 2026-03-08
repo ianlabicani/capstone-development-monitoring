@@ -19,7 +19,9 @@ class UserStory extends Model
         'keywords',
         'status',
         'is_covered',
+        'manually_marked',
         'sort_order',
+        'version',
     ];
 
     /**
@@ -31,7 +33,9 @@ class UserStory extends Model
             'status' => UserStoryStatus::class,
             'keywords' => 'array',
             'is_covered' => 'boolean',
+            'manually_marked' => 'boolean',
             'sort_order' => 'integer',
+            'version' => 'integer',
         ];
     }
 

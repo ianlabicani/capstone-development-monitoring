@@ -244,12 +244,14 @@ class AnalysisController extends Controller
         abort_unless($team, 403);
 
         $nextSort = $team->userStories()->max('sort_order') ?? 0;
+        $currentVersion = $team->userStories()->max('version') ?? 1;
 
         $team->userStories()->create([
             'title' => $request->validated('title'),
             'description' => $request->validated('description'),
             'status' => UserStoryStatus::Draft->value,
             'sort_order' => $nextSort + 1,
+            'version' => $currentVersion,
         ]);
 
         return back()->with('success', 'User story created.');
@@ -261,7 +263,10 @@ class AnalysisController extends Controller
 
         abort_unless($team && $story->team_id === $team->id, 403);
 
-        $story->update(['is_covered' => ! $story->is_covered]);
+        $story->update([
+            'is_covered' => ! $story->is_covered,
+            'manually_marked' => true,
+        ]);
 
         return back()->with('success', $story->is_covered
             ? 'Story marked as achieved.'

@@ -23,7 +23,9 @@ class UserStoryFactory extends Factory
             'keywords' => fake()->words(5),
             'status' => UserStoryStatus::Draft,
             'is_covered' => false,
+            'manually_marked' => false,
             'sort_order' => fake()->numberBetween(0, 10),
+            'version' => 1,
         ];
     }
 

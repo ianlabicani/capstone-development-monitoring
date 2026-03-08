@@ -20,13 +20,14 @@ class GeminiService
     /**
      * Generate user stories from extracted PDF text.
      *
+     * @param  array<int, array{title: string, description: string}>  $existingStories
      * @return array<int, array{title: string, description: string, keywords: array<string>}>
      *
      * @throws RequestException
      */
-    public function generateUserStories(string $pdfText): array
+    public function generateUserStories(string $pdfText, array $existingStories = []): array
     {
-        $prompt = $this->buildPrompt($pdfText);
+        $prompt = $this->buildPrompt($pdfText, $existingStories);
 
         $response = Http::throw()
             ->post(
@@ -51,8 +52,21 @@ class GeminiService
         return json_decode($text, true) ?: [];
     }
 
-    private function buildPrompt(string $pdfText): string
+    /**
+     * @param  array<int, array{title: string, description: string}>  $existingStories
+     */
+    private function buildPrompt(string $pdfText, array $existingStories = []): string
     {
+        $existingSection = '';
+
+        if (! empty($existingStories)) {
+            $storyList = collect($existingStories)
+                ->map(fn (array $story, int $i): string => ($i + 1).'. '.$story['title'].': '.$story['description'])
+                ->implode("\n");
+
+            $existingSection = "\n\nDO NOT duplicate these existing user stories — generate only NEW stories not already covered:\n".$storyList;
+        }
+
         return <<<PROMPT
 You are a software engineering analyst. Based on the following project documentation, generate a list of user stories for a software development project.
 
@@ -65,6 +79,7 @@ Return a JSON array of objects with these exact keys:
 
 Generate between 5 and 25 user stories depending on the project scope described.
 Focus on functional requirements only. Be specific and actionable.
+{$existingSection}
 
 PROJECT DOCUMENTATION:
 {$pdfText}

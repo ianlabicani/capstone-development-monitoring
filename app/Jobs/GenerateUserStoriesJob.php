@@ -38,7 +38,13 @@ class GenerateUserStoriesJob implements ShouldQueue
                 return;
             }
 
-            $stories = $gemini->generateUserStories(trim($text));
+            $existingStories = $this->team->userStories()
+                ->select('title', 'description')
+                ->get()
+                ->map(fn ($s): array => ['title' => $s->title, 'description' => $s->description ?? ''])
+                ->all();
+
+            $stories = $gemini->generateUserStories(trim($text), $existingStories);
 
             if (empty($stories)) {
                 $this->team->update(['analysis_status' => 'stale']);
@@ -46,9 +52,7 @@ class GenerateUserStoriesJob implements ShouldQueue
                 return;
             }
 
-            $this->team->userStories()
-                ->whereIn('status', ['draft', 'outdated'])
-                ->delete();
+            $nextVersion = ($this->team->userStories()->max('version') ?? 0) + 1;
 
             foreach ($stories as $index => $storyData) {
                 UserStory::create([
@@ -58,6 +62,7 @@ class GenerateUserStoriesJob implements ShouldQueue
                     'keywords' => $storyData['keywords'] ?? [],
                     'status' => 'draft',
                     'sort_order' => $index,
+                    'version' => $nextVersion,
                 ]);
             }
 
