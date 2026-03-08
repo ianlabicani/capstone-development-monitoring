@@ -5,7 +5,7 @@
             <div class="mb-6 flex items-center justify-between">
                 <div>
                     <h1 class="text-3xl font-bold tracking-tight text-slate-900">Project Analysis</h1>
-                    <p class="mt-2 text-sm text-slate-600">Upload documents and manage AI-generated user stories for {{ $team->name }}</p>
+                    <p class="mt-2 text-sm text-slate-600">Manage AI-generated user stories for {{ $team->name }}</p>
                 </div>
                 <a href="{{ route('team-leader.team.show') }}" class="inline-flex items-center justify-center rounded-lg border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-50">
                     <i class="fas fa-arrow-left mr-2"></i> Back to Team
@@ -92,7 +92,8 @@
                     </div>
                 @endif
 
-                {{-- Documents Section --}}
+                {{-- Documents Section (Hidden for presentation) --}}
+                @if (false)
                 <div class="bg-white overflow-hidden shadow-sm rounded-2xl ring-1 ring-slate-200">
                     <div class="border-b border-slate-200 p-6">
                         <h2 class="text-lg font-semibold text-slate-900">Project Documents</h2>
@@ -145,6 +146,7 @@
                         @endforeach
                     </div>
                 </div>
+                @endif
 
                 {{-- Project Description (Plain Text) --}}
                 @php $textDoc = $team->documents->firstWhere('type', 'text'); @endphp
