@@ -74,15 +74,15 @@
                 <div class="bg-white overflow-hidden shadow-sm rounded-2xl ring-1 ring-slate-200">
                     <div class="border-b border-slate-200 p-6">
                         <h2 class="text-lg font-semibold text-slate-900">Project Documents</h2>
-                        <p class="mt-1 text-sm text-slate-500">Upload up to 2 PDF documents (SOP, proof of concept, introduction) — max 10MB each</p>
+                        <p class="mt-1 text-sm text-slate-500">Upload up to 2 files (PDF or TXT, max 10MB each)</p>
                     </div>
                     <div class="p-6 space-y-4">
                         @foreach ([1, 2] as $slot)
-                            @php $doc = $team->documents->firstWhere('slot', $slot); @endphp
+                            @php $doc = $team->documents->where('type', 'file')->firstWhere('slot', $slot); @endphp
                             <div class="flex items-center justify-between rounded-lg border border-slate-200 p-4">
                                 <div class="flex items-center gap-3">
                                     <div class="w-10 h-10 rounded-lg flex items-center justify-center {{ $doc ? 'bg-orange-100' : 'bg-slate-100' }}">
-                                        <i class="fas fa-file-pdf text-lg {{ $doc ? 'text-orange-600' : 'text-slate-400' }}"></i>
+                                        <i class="fas fa-file{{ $doc ? (str_ends_with($doc->original_name, '.txt') ? '-alt' : '-pdf') : '' }} text-lg {{ $doc ? 'text-orange-600' : 'text-slate-400' }}"></i>
                                     </div>
                                     <div>
                                         <p class="text-sm font-semibold text-slate-900">Document {{ $slot }}</p>
@@ -109,7 +109,7 @@
                                         <label class="inline-flex items-center rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer">
                                             <i class="fas fa-upload mr-1"></i>
                                             <span x-text="fileName || '{{ $doc ? 'Replace' : 'Upload' }}'"></span>
-                                            <input type="file" name="document" accept=".pdf" class="hidden" @change="fileName = $event.target.files[0]?.name; $el.closest('form').submit()">
+                                            <input type="file" name="document" accept=".pdf,.txt" class="hidden" @change="fileName = $event.target.files[0]?.name; $el.closest('form').submit()">
                                         </label>
                                     </form>
                                 </div>
@@ -118,33 +118,96 @@
                     </div>
                 </div>
 
+                {{-- Project Description (Plain Text) --}}
+                @php $textDoc = $team->documents->firstWhere('type', 'text'); @endphp
+                <div class="bg-white overflow-hidden shadow-sm rounded-2xl ring-1 ring-slate-200">
+                    <div class="border-b border-slate-200 p-6">
+                        <h2 class="text-lg font-semibold text-slate-900">Project Description</h2>
+                        <p class="mt-1 text-sm text-slate-500">Describe your project goals, features, and scope in plain text as an alternative to file uploads</p>
+                    </div>
+                    <div class="p-6">
+                        <form action="{{ route('team-leader.analysis.save-text') }}" method="POST" x-data="{ changed: false }">
+                            @csrf
+                            <textarea
+                                name="content"
+                                rows="8"
+                                maxlength="50000"
+                                placeholder="Describe your project here — objectives, key features, target users, tech stack, scope..."
+                                class="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+                                @input="changed = true"
+                            >{{ old('content', $textDoc?->content) }}</textarea>
+                            @error('content')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                            <div class="mt-3 flex items-center justify-between">
+                                <p class="text-xs text-slate-400">Max 50,000 characters</p>
+                                <div class="flex items-center gap-2">
+                                    @if ($textDoc)
+                                        <form action="{{ route('team-leader.analysis.delete-text') }}" method="POST" onsubmit="return confirm('Clear the project description?')" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="inline-flex items-center rounded-lg border border-red-300 px-4 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50">
+                                                <i class="fas fa-trash mr-1"></i> Clear
+                                            </button>
+                                        </form>
+                                    @endif
+                                    <button type="submit" class="inline-flex items-center rounded-lg bg-orange-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-orange-700" x-bind:class="{ 'ring-2 ring-orange-300': changed }">
+                                        <i class="fas fa-save mr-1"></i> Save Description
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
                 {{-- Generate Button --}}
                 <div class="bg-white overflow-hidden shadow-sm rounded-2xl ring-1 ring-slate-200">
-                    <div class="p-6 flex items-center justify-between">
-                        <div>
-                            <h2 class="text-lg font-semibold text-slate-900">AI Story Generation</h2>
-                            <p class="mt-1 text-sm text-slate-500">
-                                @if ($team->analysis_status === 'processing')
-                                    <span class="text-orange-600"><i class="fas fa-spinner fa-spin mr-1"></i> Generating stories...</span>
-                                @elseif ($team->analysis_status === 'completed')
-                                    <span class="text-emerald-600"><i class="fas fa-check mr-1"></i> Last generated {{ $team->analysis_completed_at?->diffForHumans() }}</span>
-                                @elseif ($team->analysis_status === 'stale')
-                                    <span class="text-amber-600"><i class="fas fa-exclamation-triangle mr-1"></i> Documents changed — regeneration recommended</span>
-                                @else
-                                    Upload documents above, then generate user stories
-                                @endif
-                            </p>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h2 class="text-lg font-semibold text-slate-900">AI Story Generation</h2>
+                                <p class="mt-1 text-sm text-slate-500">
+                                    @if ($team->analysis_status === 'processing')
+                                        <span class="text-orange-600"><i class="fas fa-spinner fa-spin mr-1"></i> Generating stories...</span>
+                                    @elseif ($team->analysis_status === 'completed')
+                                        <span class="text-emerald-600"><i class="fas fa-check mr-1"></i> Last generated {{ $team->analysis_completed_at?->diffForHumans() }}</span>
+                                    @elseif ($team->analysis_status === 'stale')
+                                        <span class="text-amber-600"><i class="fas fa-exclamation-triangle mr-1"></i> Input changed — regeneration recommended</span>
+                                    @else
+                                        Provide input above, then choose a source to generate user stories
+                                    @endif
+                                </p>
+                            </div>
                         </div>
-                        <form action="{{ route('team-leader.analysis.generate') }}" method="POST">
-                            @csrf
-                            <button
-                                type="submit"
-                                @if ($team->documents->isEmpty() || $team->analysis_status === 'processing') disabled @endif
-                                class="inline-flex items-center rounded-lg bg-orange-600 px-6 py-3 text-sm font-semibold text-white hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                <i class="fas fa-brain mr-2"></i> Generate Analysis
-                            </button>
-                        </form>
+                        @php
+                            $hasFiles = $team->documents->where('type', 'file')->isNotEmpty();
+                            $hasText = $team->documents->firstWhere('type', 'text') !== null;
+                            $isProcessing = $team->analysis_status === 'processing';
+                        @endphp
+                        <div class="mt-4 flex flex-wrap items-center gap-3">
+                            <form action="{{ route('team-leader.analysis.generate') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="source" value="files">
+                                <button
+                                    type="submit"
+                                    @if (!$hasFiles || $isProcessing) disabled @endif
+                                    class="inline-flex items-center rounded-lg bg-orange-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <i class="fas fa-file-alt mr-2"></i> Generate from Files
+                                </button>
+                            </form>
+                            <form action="{{ route('team-leader.analysis.generate') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="source" value="text">
+                                <button
+                                    type="submit"
+                                    @if (!$hasText || $isProcessing) disabled @endif
+                                    class="inline-flex items-center rounded-lg border-2 border-orange-600 px-5 py-2.5 text-sm font-semibold text-orange-600 hover:bg-orange-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <i class="fas fa-align-left mr-2"></i> Generate from Description
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
 
@@ -236,8 +299,8 @@
                     <div class="bg-white overflow-hidden shadow-sm rounded-2xl ring-1 ring-slate-200">
                         <div class="p-6 text-center">
                             <i class="fas fa-file-upload text-4xl text-slate-300 mb-4 block"></i>
-                            <p class="text-slate-600">Upload your project documents to get started.</p>
-                            <p class="mt-1 text-sm text-slate-500">Upload an SOP, proof of concept, or project introduction as PDF.</p>
+                            <p class="text-slate-600">Provide project input to get started.</p>
+                            <p class="mt-1 text-sm text-slate-500">Upload files (PDF or TXT) or write a project description above.</p>
                         </div>
                     </div>
                 @endif

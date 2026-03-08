@@ -15,28 +15,25 @@ class GenerateUserStoriesJob implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct(public Team $team) {}
+    public function __construct(
+        public Team $team,
+        public string $source = 'files',
+    ) {}
 
     public function handle(PdfExtractorService $pdfExtractor, GeminiService $gemini): void
     {
         $this->team->update(['analysis_status' => 'processing']);
 
         try {
-            $documents = $this->team->documents;
+            $text = $this->extractText($pdfExtractor);
 
-            if ($documents->isEmpty()) {
-                $this->team->update(['analysis_status' => null]);
+            if (empty(trim($text))) {
+                $this->team->update(['analysis_status' => 'stale']);
 
                 return;
             }
 
-            $combinedText = '';
-            foreach ($documents as $document) {
-                $path = Storage::disk('local')->path($document->file_path);
-                $combinedText .= $pdfExtractor->extract($path)."\n\n";
-            }
-
-            $stories = $gemini->generateUserStories(trim($combinedText));
+            $stories = $gemini->generateUserStories(trim($text));
 
             if (empty($stories)) {
                 $this->team->update(['analysis_status' => 'stale']);
@@ -73,5 +70,34 @@ class GenerateUserStoriesJob implements ShouldQueue
 
             throw $e;
         }
+    }
+
+    private function extractText(PdfExtractorService $pdfExtractor): string
+    {
+        if ($this->source === 'text') {
+            $textDoc = $this->team->documents()->where('type', 'text')->first();
+
+            return $textDoc?->content ?? '';
+        }
+
+        $documents = $this->team->documents()->where('type', 'file')->get();
+
+        if ($documents->isEmpty()) {
+            return '';
+        }
+
+        $combinedText = '';
+        foreach ($documents as $document) {
+            $path = Storage::disk('local')->path($document->file_path);
+            $extension = pathinfo($document->original_name, PATHINFO_EXTENSION);
+
+            if ($extension === 'txt') {
+                $combinedText .= Storage::disk('local')->get($document->file_path)."\n\n";
+            } else {
+                $combinedText .= $pdfExtractor->extract($path)."\n\n";
+            }
+        }
+
+        return $combinedText;
     }
 }

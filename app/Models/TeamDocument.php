@@ -14,9 +14,11 @@ class TeamDocument extends Model
     protected $fillable = [
         'team_id',
         'slot',
+        'type',
         'file_path',
         'original_name',
         'file_size',
+        'content',
     ];
 
     /**
@@ -28,6 +30,16 @@ class TeamDocument extends Model
             'slot' => 'integer',
             'file_size' => 'integer',
         ];
+    }
+
+    public function isFile(): bool
+    {
+        return $this->type === 'file';
+    }
+
+    public function isText(): bool
+    {
+        return $this->type === 'text';
     }
 
     public function team(): BelongsTo

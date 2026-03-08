@@ -18,7 +18,7 @@ class UploadTeamDocumentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'document' => ['required', File::types(['pdf'])->max(10 * 1024)],
+            'document' => ['required', File::types(['pdf', 'txt'])->max(10 * 1024)],
             'slot' => ['required', 'integer', 'in:1,2'],
         ];
     }
@@ -29,7 +29,7 @@ class UploadTeamDocumentRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'document.required' => 'Please select a PDF file to upload.',
+            'document.required' => 'Please select a file to upload.',
             'document.max' => 'The document must not exceed 10MB.',
             'slot.required' => 'Please specify which document slot to use.',
             'slot.in' => 'Invalid document slot.',

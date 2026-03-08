@@ -4,12 +4,14 @@ namespace App\Http\Controllers\TeamLeader;
 
 use App\Enums\UserStoryStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\TeamLeader\SaveTextDocumentRequest;
 use App\Http\Requests\TeamLeader\UpdateUserStoryRequest;
 use App\Http\Requests\TeamLeader\UploadTeamDocumentRequest;
 use App\Jobs\GenerateUserStoriesJob;
 use App\Models\TeamDocument;
 use App\Models\UserStory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -92,21 +94,81 @@ class AnalysisController extends Controller
         return back()->with('success', 'Document removed.');
     }
 
-    public function generate(): RedirectResponse
+    public function saveText(SaveTextDocumentRequest $request): RedirectResponse
     {
         $team = Auth::user()->team;
 
         abort_unless($team, 403);
 
-        if ($team->documents()->count() === 0) {
-            return back()->withErrors(['generate' => 'Upload at least one document before generating analysis.']);
+        $textDoc = $team->documents()->where('type', 'text')->first();
+
+        if ($textDoc) {
+            $textDoc->update(['content' => $request->validated('content')]);
+        } else {
+            $nextSlot = ($team->documents()->where('type', 'file')->max('slot') ?? 0) + 1;
+
+            $team->documents()->create([
+                'slot' => max($nextSlot, 3),
+                'type' => 'text',
+                'content' => $request->validated('content'),
+            ]);
+        }
+
+        if ($team->analysis_status === 'completed') {
+            $team->update(['analysis_status' => 'stale']);
+
+            $team->userStories()
+                ->where('status', UserStoryStatus::Approved)
+                ->update(['status' => UserStoryStatus::Outdated->value]);
+        }
+
+        return back()->with('success', 'Project description saved.');
+    }
+
+    public function deleteText(): RedirectResponse
+    {
+        $team = Auth::user()->team;
+
+        abort_unless($team, 403);
+
+        $textDoc = $team->documents()->where('type', 'text')->first();
+
+        if ($textDoc) {
+            $textDoc->delete();
+        }
+
+        if ($team->analysis_status === 'completed') {
+            $team->update(['analysis_status' => 'stale']);
+        }
+
+        return back()->with('success', 'Project description removed.');
+    }
+
+    public function generate(Request $request): RedirectResponse
+    {
+        $team = Auth::user()->team;
+
+        abort_unless($team, 403);
+
+        $validated = $request->validate([
+            'source' => ['required', 'in:files,text'],
+        ]);
+
+        $source = $validated['source'];
+
+        if ($source === 'files' && $team->documents()->where('type', 'file')->count() === 0) {
+            return back()->withErrors(['generate' => 'Upload at least one file document before generating.']);
+        }
+
+        if ($source === 'text' && ! $team->documents()->where('type', 'text')->exists()) {
+            return back()->withErrors(['generate' => 'Save your project description before generating.']);
         }
 
         if ($team->analysis_status === 'processing') {
             return back()->withErrors(['generate' => 'Analysis is already being generated.']);
         }
 
-        GenerateUserStoriesJob::dispatch($team);
+        GenerateUserStoriesJob::dispatch($team, $source);
 
         return back()->with('success', 'Analysis generation started. This may take a moment.');
     }

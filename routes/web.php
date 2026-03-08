@@ -101,6 +101,8 @@ Route::middleware(['auth', 'verified', 'permission:register repository'])->prefi
     Route::get('team/analysis', [AnalysisController::class, 'show'])->name('analysis.show');
     Route::post('team/documents', [AnalysisController::class, 'uploadDocument'])->name('analysis.upload-document');
     Route::delete('team/documents/{document}', [AnalysisController::class, 'deleteDocument'])->name('analysis.delete-document');
+    Route::post('team/analysis/text', [AnalysisController::class, 'saveText'])->name('analysis.save-text');
+    Route::delete('team/analysis/text', [AnalysisController::class, 'deleteText'])->name('analysis.delete-text');
     Route::post('team/analysis/generate', [AnalysisController::class, 'generate'])->name('analysis.generate');
     Route::patch('team/stories/{story}', [AnalysisController::class, 'updateStory'])->name('analysis.update-story');
     Route::post('team/stories/{story}/approve', [AnalysisController::class, 'approveStory'])->name('analysis.approve-story');
