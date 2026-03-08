@@ -99,6 +99,7 @@ Route::middleware(['auth', 'verified', 'permission:register repository'])->prefi
 
     // Analysis
     Route::get('team/analysis', [AnalysisController::class, 'show'])->name('analysis.show');
+    Route::post('team/analysis/sync', [AnalysisController::class, 'syncAnalysis'])->name('analysis.sync');
     Route::post('team/documents', [AnalysisController::class, 'uploadDocument'])->name('analysis.upload-document');
     Route::delete('team/documents/{document}', [AnalysisController::class, 'deleteDocument'])->name('analysis.delete-document');
     Route::post('team/analysis/text', [AnalysisController::class, 'saveText'])->name('analysis.save-text');

@@ -20,6 +20,7 @@ class Team extends Model
         'logo_path',
         'analysis_status',
         'analysis_completed_at',
+        'progress_summary',
     ];
 
     /**

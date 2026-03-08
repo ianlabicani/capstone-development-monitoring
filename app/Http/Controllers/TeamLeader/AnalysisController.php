@@ -9,8 +9,12 @@ use App\Http\Requests\TeamLeader\SaveTextDocumentRequest;
 use App\Http\Requests\TeamLeader\UpdateUserStoryRequest;
 use App\Http\Requests\TeamLeader\UploadTeamDocumentRequest;
 use App\Jobs\GenerateUserStoriesJob;
+use App\Jobs\MatchStoriesToCommitsJob;
 use App\Models\TeamDocument;
 use App\Models\UserStory;
+use App\Services\GitHubService;
+use App\Services\ProgressSummaryService;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -262,5 +266,50 @@ class AnalysisController extends Controller
         return back()->with('success', $story->is_covered
             ? 'Story marked as achieved.'
             : 'Story marked as not achieved.');
+    }
+
+    public function syncAnalysis(GitHubService $github, ProgressSummaryService $summaryService): RedirectResponse
+    {
+        $team = Auth::user()->team;
+
+        abort_unless($team, 403);
+
+        $team->load('repositories');
+        $syncedCount = 0;
+
+        foreach ($team->repositories as $repository) {
+            $since = $repository->last_synced_at?->toIso8601String();
+
+            try {
+                $commits = $github->fetchCommits(
+                    $repository->github_owner,
+                    $repository->github_repo,
+                    $repository->default_branch,
+                    $since,
+                );
+            } catch (RequestException $e) {
+                continue;
+            }
+
+            foreach ($commits as $commitData) {
+                $repository->commits()->updateOrCreate(
+                    ['sha' => $commitData['sha']],
+                    $commitData,
+                );
+                $syncedCount++;
+            }
+
+            $repository->update(['last_synced_at' => now()]);
+        }
+
+        if ($team->userStories()->where('status', 'approved')->exists()) {
+            MatchStoriesToCommitsJob::dispatch($team);
+        }
+
+        // Generate AI summary
+        $summary = $summaryService->generateSummary($team);
+        $team->update(['progress_summary' => $summary]);
+
+        return back()->with('success', "Synced {$syncedCount} commit(s). Development progress updated.");
     }
 }
