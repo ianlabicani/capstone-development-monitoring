@@ -41,13 +41,20 @@
                     <div class="bg-white overflow-hidden shadow-sm rounded-2xl ring-1 ring-slate-200">
                         <div class="border-b border-slate-200 p-6 flex items-center justify-between">
                             <h2 class="text-lg font-semibold text-slate-900">Development Progress</h2>
-                            <form action="{{ route('team-leader.analysis.sync') }}" method="POST">
+                            <form action="{{ route('team-leader.analysis.sync') }}" method="POST" x-data="{ loading: false }" @submit="loading = true">
                                 @csrf
                                 <button
                                     type="submit"
                                     class="inline-flex items-center rounded-lg bg-orange-600 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-700"
+                                    :disabled="loading"
                                 >
-                                    <i class="fas fa-sync mr-2"></i> Sync Now
+                                    <template x-if="loading">
+                                        <i class='fas fa-spinner fa-spin mr-2'></i>
+                                    </template>
+                                    <template x-if="!loading">
+                                        <i class="fas fa-sync mr-2"></i>
+                                    </template>
+                                    <span x-text="loading ? 'Syncing...' : 'Sync Now'"></span>
                                 </button>
                             </form>
                         </div>
@@ -110,11 +117,17 @@
                                 </div>
                                 <div class="flex items-center gap-2">
                                     @if ($doc)
-                                        <form action="{{ route('team-leader.analysis.delete-document', $doc) }}" method="POST" onsubmit="return confirm('Remove this document?')">
+                                        <form action="{{ route('team-leader.analysis.delete-document', $doc) }}" method="POST" onsubmit="return confirm('Remove this document?')" x-data="{ loading: false }" @submit="loading = true">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="inline-flex items-center rounded-lg border border-red-300 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50">
-                                                <i class="fas fa-trash mr-1"></i> Remove
+                                            <button type="submit" class="inline-flex items-center rounded-lg border border-red-300 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50" :disabled="loading">
+                                                <template x-if="loading">
+                                                    <i class='fas fa-spinner fa-spin mr-1'></i>
+                                                </template>
+                                                <template x-if="!loading">
+                                                    <i class="fas fa-trash mr-1"></i>
+                                                </template>
+                                                <span x-text="loading ? 'Removing...' : 'Remove'"></span>
                                             </button>
                                         </form>
                                     @endif
@@ -158,11 +171,17 @@
                                 <p class="text-xs text-slate-400">Max 50,000 characters</p>
                                 <div class="flex items-center gap-2">
                                     @if ($textDoc)
-                                        <form action="{{ route('team-leader.analysis.delete-text') }}" method="POST" onsubmit="return confirm('Clear the project description?')" class="inline">
+                                        <form action="{{ route('team-leader.analysis.delete-text') }}" method="POST" onsubmit="return confirm('Clear the project description?')" class="inline" x-data="{ loading: false }" @submit="loading = true">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="inline-flex items-center rounded-lg border border-red-300 px-4 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50">
-                                                <i class="fas fa-trash mr-1"></i> Clear
+                                            <button type="submit" class="inline-flex items-center rounded-lg border border-red-300 px-4 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50" :disabled="loading">
+                                                <template x-if="loading">
+                                                    <i class='fas fa-spinner fa-spin mr-1'></i>
+                                                </template>
+                                                <template x-if="!loading">
+                                                    <i class="fas fa-trash mr-1"></i>
+                                                </template>
+                                                <span x-text="loading ? 'Clearing...' : 'Clear'"></span>
                                             </button>
                                         </form>
                                     @endif
@@ -200,26 +219,40 @@
                             $isProcessing = $team->analysis_status === 'processing';
                         @endphp
                         <div class="mt-4 flex flex-wrap items-center gap-3">
-                            <form action="{{ route('team-leader.analysis.generate') }}" method="POST">
+                            <form action="{{ route('team-leader.analysis.generate') }}" method="POST" x-data="{ loading: false }" @submit="loading = true">
                                 @csrf
                                 <input type="hidden" name="source" value="files">
                                 <button
                                     type="submit"
                                     @if (!$hasFiles || $isProcessing) disabled @endif
                                     class="inline-flex items-center rounded-lg bg-orange-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    :disabled="loading"
                                 >
-                                    <i class="fas fa-file-alt mr-2"></i> Generate from Files
+                                    <template x-if="loading">
+                                        <i class='fas fa-spinner fa-spin mr-2'></i>
+                                    </template>
+                                    <template x-if="!loading">
+                                        <i class="fas fa-file-alt mr-2"></i>
+                                    </template>
+                                    <span x-text="loading ? 'Generating...' : 'Generate from Files'"></span>
                                 </button>
                             </form>
-                            <form action="{{ route('team-leader.analysis.generate') }}" method="POST">
+                            <form action="{{ route('team-leader.analysis.generate') }}" method="POST" x-data="{ loading: false }" @submit="loading = true">
                                 @csrf
                                 <input type="hidden" name="source" value="text">
                                 <button
                                     type="submit"
                                     @if (!$hasText || $isProcessing) disabled @endif
                                     class="inline-flex items-center rounded-lg border-2 border-orange-600 px-5 py-2.5 text-sm font-semibold text-orange-600 hover:bg-orange-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    :disabled="loading"
                                 >
-                                    <i class="fas fa-align-left mr-2"></i> Generate from Description
+                                    <template x-if="loading">
+                                        <i class='fas fa-spinner fa-spin mr-2'></i>
+                                    </template>
+                                    <template x-if="!loading">
+                                        <i class="fas fa-align-left mr-2"></i>
+                                    </template>
+                                    <span x-text="loading ? 'Generating...' : 'Generate from Description'"></span>
                                 </button>
                             </form>
                         </div>
@@ -314,19 +347,29 @@
                                                 </button>
                                             </form>
                                             @if ($story->status === \App\Enums\UserStoryStatus::Approved)
-                                                <form action="{{ route('team-leader.analysis.toggle-achievement', $story) }}" method="POST">
+                                                <form action="{{ route('team-leader.analysis.toggle-achievement', $story) }}" method="POST" x-data="{ loading: false }" @submit="loading = true">
                                                     @csrf
                                                     @method('PATCH')
-                                                    <button type="submit" class="inline-flex items-center rounded-lg border px-2 py-1.5 text-xs hover:bg-slate-50 {{ $story->is_covered ? 'border-amber-300 text-amber-600' : 'border-slate-300 text-slate-600' }}" title="{{ $story->is_covered ? 'Mark as not achieved' : 'Mark as achieved' }}">
-                                                        <i class="fas fa-{{ $story->is_covered ? 'star' : 'star' }} fa-{{ $story->is_covered ? '' : 'regular' }}"></i>
+                                                    <button type="submit" class="inline-flex items-center rounded-lg border px-2 py-1.5 text-xs hover:bg-slate-50 {{ $story->is_covered ? 'border-amber-300 text-amber-600' : 'border-slate-300 text-slate-600' }}" title="{{ $story->is_covered ? 'Mark as not achieved' : 'Mark as achieved' }}" :disabled="loading">
+                                                        <template x-if="loading">
+                                                            <i class='fas fa-spinner fa-spin'></i>
+                                                        </template>
+                                                        <template x-if="!loading">
+                                                            <i class="fas fa-{{ $story->is_covered ? 'star' : 'star' }} fa-{{ $story->is_covered ? '' : 'regular' }}"></i>
+                                                        </template>
                                                     </button>
                                                 </form>
                                             @endif
-                                            <form action="{{ route('team-leader.analysis.delete-story', $story) }}" method="POST" onsubmit="return confirm('Delete this story?')">
+                                            <form action="{{ route('team-leader.analysis.delete-story', $story) }}" method="POST" onsubmit="return confirm('Delete this story?')" x-data="{ loading: false }" @submit="loading = true">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="inline-flex items-center rounded-lg border border-red-300 px-2 py-1.5 text-xs text-red-600 hover:bg-red-50" title="Delete">
-                                                    <i class="fas fa-trash"></i>
+                                                <button type="submit" class="inline-flex items-center rounded-lg border border-red-300 px-2 py-1.5 text-xs text-red-600 hover:bg-red-50" title="Delete" :disabled="loading">
+                                                    <template x-if="loading">
+                                                        <i class='fas fa-spinner fa-spin'></i>
+                                                    </template>
+                                                    <template x-if="!loading">
+                                                        <i class="fas fa-trash"></i>
+                                                    </template>
                                                 </button>
                                             </form>
                                         </div>
