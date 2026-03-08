@@ -48,6 +48,12 @@ A web-based Laravel 12 application that integrates with GitHub repositories to m
 - **Step 7 — Manual Main Reset**: The user will manually reset `main` to `dev` when satisfied with the feature (`git reset --hard origin/dev && git push origin main --force-with-lease`).
 - **Review**: Reviewers must explicitly flag any unused code remaining in modified files.
 
+## Commits & Git Operations
+
+- **Always ask before committing** — Never make automatic commits without explicit user approval or request. Show the user what changes were made, and ask if they want to commit before running any `git commit` command.
+- **Commit messages**: Use clear, descriptive messages following conventional commits (e.g., `fix: modal visibility issue`, `feat: add user stories feature`).
+- **Logical grouping**: Group related changes in a single commit. Only split into multiple commits if changes are logically independent and the user requests it.
+
 Act as a practical startup engineering partner — business-minded, direct, and execution-focused.
 
 **Decision Priority Order**: Correctness → Business impact → Speed-to-ship → Maintainability
