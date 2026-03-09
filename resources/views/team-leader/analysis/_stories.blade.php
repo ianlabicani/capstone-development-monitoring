@@ -158,12 +158,12 @@
                                     <form action="{{ route('team-leader.analysis.toggle-achievement', $story) }}" method="POST" x-data="{ loading: false }" @submit="loading = true">
                                         @csrf
                                         @method('PATCH')
-                                        <button type="submit" class="inline-flex items-center rounded-lg border px-2 py-1.5 text-xs hover:bg-slate-50 {{ $story->is_covered ? 'border-amber-300 text-amber-600' : 'border-slate-300 text-slate-600' }}" :disabled="loading">
+                                        <button type="submit" class="inline-flex items-center rounded-lg border px-2 py-1.5 text-xs hover:bg-slate-50 {{ $story->is_achieved ? 'border-amber-300 text-amber-600' : 'border-slate-300 text-slate-600' }}" :disabled="loading" title="{{ $story->is_achieved ? 'Mark as not achieved' : 'Mark as achieved' }}">
                                             <template x-if="loading">
                                                 <i class='fas fa-spinner fa-spin'></i>
                                             </template>
                                             <template x-if="!loading">
-                                                <i class="{{ $story->is_covered ? 'fas' : 'far' }} fa-star"></i>
+                                                <i class="{{ $story->is_achieved ? 'fas' : 'far' }} fa-star"></i>
                                             </template>
                                         </button>
                                     </form>
