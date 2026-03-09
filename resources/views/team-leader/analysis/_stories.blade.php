@@ -52,10 +52,16 @@
                 <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Filter by status</p>
                 <div class="flex flex-wrap gap-2">
                     <a
-                        href="{{ route('team-leader.analysis.show', ['version' => $selectedVersion, 'status' => 'gap']) }}"
-                        class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition {{ $selectedStatus === 'gap' ? 'bg-orange-600 text-white ring-orange-600' : 'bg-slate-100 text-slate-700 ring-slate-200' }}"
+                        href="{{ route('team-leader.analysis.show', ['version' => $selectedVersion, 'status' => 'all']) }}"
+                        class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition {{ $selectedStatus === 'all' ? 'bg-orange-600 text-white ring-orange-600' : 'bg-slate-100 text-slate-700 ring-slate-200' }}"
                     >
-                        <i class="fas fa-exclamation mr-1.5"></i> Gaps
+                        <i class="fas fa-list mr-1.5"></i> All
+                    </a>
+                    <a
+                        href="{{ route('team-leader.analysis.show', ['version' => $selectedVersion, 'status' => 'draft']) }}"
+                        class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition {{ $selectedStatus === 'draft' ? 'bg-orange-600 text-white ring-orange-600' : 'bg-slate-100 text-slate-700 ring-slate-200' }}"
+                    >
+                        <i class="fas fa-pencil mr-1.5"></i> Draft
                     </a>
                     <a
                         href="{{ route('team-leader.analysis.show', ['version' => $selectedVersion, 'status' => 'approved']) }}"
@@ -64,10 +70,16 @@
                         <i class="fas fa-check mr-1.5"></i> Approved
                     </a>
                     <a
-                        href="{{ route('team-leader.analysis.show', ['version' => $selectedVersion, 'status' => 'draft']) }}"
-                        class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition {{ $selectedStatus === 'draft' ? 'bg-orange-600 text-white ring-orange-600' : 'bg-slate-100 text-slate-700 ring-slate-200' }}"
+                        href="{{ route('team-leader.analysis.show', ['version' => $selectedVersion, 'status' => 'covered']) }}"
+                        class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition {{ $selectedStatus === 'covered' ? 'bg-orange-600 text-white ring-orange-600' : 'bg-slate-100 text-slate-700 ring-slate-200' }}"
                     >
-                        <i class="fas fa-pencil mr-1.5"></i> Draft
+                        <i class="fas fa-star mr-1.5"></i> Covered
+                    </a>
+                    <a
+                        href="{{ route('team-leader.analysis.show', ['version' => $selectedVersion, 'status' => 'gap']) }}"
+                        class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 hover:ring-orange-300 transition {{ $selectedStatus === 'gap' ? 'bg-orange-600 text-white ring-orange-600' : 'bg-slate-100 text-slate-700 ring-slate-200' }}"
+                    >
+                        <i class="fas fa-exclamation mr-1.5"></i> Gaps
                     </a>
                 </div>
             </div>
@@ -98,7 +110,11 @@
                                     </span>
                                     @if ($story->manually_created)
                                         <span class="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800">
-                                            <i class="fas fa-hand mr-1"></i> Manual
+                                            <i class="fas fa-hand mr-1"></i> Manually Created
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-800">
+                                            <i class="fas fa-sparkles mr-1"></i> AI
                                         </span>
                                     @endif
                                 </div>
@@ -155,15 +171,15 @@
                                     </button>
                                 </form>
                                 @if ($story->status === \App\Enums\UserStoryStatus::Approved)
-                                    <form action="{{ route('team-leader.analysis.toggle-achievement', $story) }}" method="POST" x-data="{ loading: false }" @submit="loading = true">
+                                    <form action="{{ route('team-leader.analysis.toggle-coverage', $story) }}" method="POST" x-data="{ loading: false }" @submit="loading = true">
                                         @csrf
                                         @method('PATCH')
-                                        <button type="submit" class="inline-flex items-center rounded-lg border px-2 py-1.5 text-xs hover:bg-slate-50 {{ $story->is_achieved ? 'border-amber-300 text-amber-600' : 'border-slate-300 text-slate-600' }}" :disabled="loading" title="{{ $story->is_achieved ? 'Mark as not achieved' : 'Mark as achieved' }}">
+                                        <button type="submit" class="inline-flex items-center rounded-lg border px-2 py-1.5 text-xs hover:bg-slate-50 {{ $story->is_covered ? 'border-amber-300 text-amber-600' : 'border-slate-300 text-slate-600' }}" :disabled="loading" title="{{ $story->is_covered ? 'Unmark coverage' : 'Mark as covered' }}">
                                             <template x-if="loading">
                                                 <i class='fas fa-spinner fa-spin'></i>
                                             </template>
                                             <template x-if="!loading">
-                                                <i class="{{ $story->is_achieved ? 'fas' : 'far' }} fa-star"></i>
+                                                <i class="{{ $story->is_covered ? 'fas' : 'far' }} fa-star"></i>
                                             </template>
                                         </button>
                                     </form>

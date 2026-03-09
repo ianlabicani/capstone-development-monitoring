@@ -92,20 +92,19 @@ class UserStoryController extends Controller
         return back()->with('success', 'User story created.');
     }
 
-    public function toggleAchievementStatus(UserStory $story): RedirectResponse
+    public function toggleCoverage(UserStory $story): RedirectResponse
     {
         $team = Auth::user()->team;
 
         abort_unless($team && $story->team_id === $team->id, 403);
 
-        // When manually toggling achievement, mark it as manually updated
         $story->update([
-            'is_achieved' => ! $story->is_achieved,
-            'manually_achieved_at' => $story->is_achieved ? null : now(),
+            'is_covered' => ! $story->is_covered,
+            'manually_marked' => true,
         ]);
 
-        return back()->with('success', $story->is_achieved
-            ? 'Story marked as achieved.'
-            : 'Story marked as not achieved.');
+        return back()->with('success', $story->is_covered
+            ? 'Story marked as covered.'
+            : 'Story marked as not covered.');
     }
 }

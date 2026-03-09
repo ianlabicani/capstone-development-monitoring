@@ -560,22 +560,47 @@ test('manually created story defaults to version 1 when no stories exist', funct
     expect($story->version)->toBe('v1');
 });
 
-// --- Manual Achievement Tracking ---
+// --- Manual Coverage Toggle ---
 
-test('toggling achievement sets manually_achieved_at timestamp', function () {
+test('toggling coverage marks story as covered and manually marked', function () {
     $story = UserStory::factory()->approved()->create([
         'team_id' => $this->team->id,
-        'is_achieved' => false,
-        'manually_achieved_at' => null,
+        'is_covered' => false,
+        'manually_marked' => false,
     ]);
 
     $this->actingAs($this->user)
-        ->patch(route('team-leader.analysis.toggle-achievement', $story))
+        ->patch(route('team-leader.analysis.toggle-coverage', $story))
         ->assertRedirect();
 
     $story->refresh();
-    expect($story->is_achieved)->toBeTrue();
-    expect($story->manually_achieved_at)->not->toBeNull();
+    expect($story->is_covered)->toBeTrue();
+    expect($story->manually_marked)->toBeTrue();
+});
+
+test('toggling coverage off keeps manually marked flag', function () {
+    $story = UserStory::factory()->approved()->create([
+        'team_id' => $this->team->id,
+        'is_covered' => true,
+        'manually_marked' => true,
+    ]);
+
+    $this->actingAs($this->user)
+        ->patch(route('team-leader.analysis.toggle-coverage', $story))
+        ->assertRedirect();
+
+    $story->refresh();
+    expect($story->is_covered)->toBeFalse();
+    expect($story->manually_marked)->toBeTrue();
+});
+
+test('cannot toggle coverage on another teams story', function () {
+    $otherTeam = Team::factory()->create();
+    $story = UserStory::factory()->approved()->create(['team_id' => $otherTeam->id]);
+
+    $this->actingAs($this->user)
+        ->patch(route('team-leader.analysis.toggle-coverage', $story))
+        ->assertForbidden();
 });
 
 test('matching service skips manually marked stories', function () {

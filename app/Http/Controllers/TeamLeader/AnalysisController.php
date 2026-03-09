@@ -57,8 +57,9 @@ class AnalysisController extends Controller
             $query = $query->where('status', UserStoryStatus::Approved);
         } elseif ($selectedStatus === 'draft') {
             $query = $query->where('status', UserStoryStatus::Draft);
+        } elseif ($selectedStatus === 'covered') {
+            $query = $query->where('status', UserStoryStatus::Approved)->where('is_covered', true);
         } elseif ($selectedStatus === 'gap') {
-            // Gaps = Approved but not covered
             $query = $query->where('status', UserStoryStatus::Approved)->where('is_covered', false);
         }
 

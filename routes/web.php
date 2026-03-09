@@ -112,7 +112,7 @@ Route::middleware(['auth', 'verified', 'permission:register repository'])->prefi
     Route::post('team/stories', [UserStoryController::class, 'store'])->name('analysis.store-story');
     Route::patch('team/stories/{story}', [UserStoryController::class, 'update'])->name('analysis.update-story');
     Route::post('team/stories/{story}/approve', [UserStoryController::class, 'approve'])->name('analysis.approve-story');
-    Route::patch('team/stories/{story}/achievement', [UserStoryController::class, 'toggleAchievementStatus'])->name('analysis.toggle-achievement');
+    Route::patch('team/stories/{story}/coverage', [UserStoryController::class, 'toggleCoverage'])->name('analysis.toggle-coverage');
     Route::delete('team/stories/{story}', [UserStoryController::class, 'delete'])->name('analysis.delete-story');
 });
 
